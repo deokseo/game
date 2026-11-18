@@ -1,0 +1,1389 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Neon Arcade</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&family=Share+Tech+Mono&display=swap">
+<style>
+/* Макет: вузька шапка; у першому екрані текст ліворуч і живе ігрове поле праворуч;
+   нижче правила з кольоровими позначками з гри, таблиця швидкості, запуск на ПК, ідеї. */
+:root {
+  --bg: #07070f;
+  --surface: #0d0e1f;
+  --surface2: #14162f;
+  --line: #1f2247;
+  --grid: #0e1027;
+  --fg: #e7edff;
+  --dim: #8f96c0;
+  --cyan: #00ebff;
+  --magenta: #ff2aa1;
+  --green: #39ff78;
+  --gold: #ffd728;
+  --red: #ff4658;
+  --display: 'Exo 2', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Share Tech Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding-block: 0 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 25px 25px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 25px 25px,
+    var(--bg);
+  color: var(--fg);
+  font-family: var(--display);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.1; }
+p { margin: 0; }
+a { color: var(--cyan); }
+:focus-visible { outline: 2px solid var(--magenta); outline-offset: 3px; }
+
+/* Шапка */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding-block: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .14em; font-size: 15px; }
+.brand svg { display: block; filter: drop-shadow(0 0 6px rgba(57,255,120,.6)); }
+.nav { display: flex; gap: 6px 20px; flex-wrap: wrap; font-family: var(--mono); font-size: 14px; text-transform: uppercase; letter-spacing: .08em; }
+.nav a { color: var(--dim); text-decoration: none; padding-block: 4px; }
+.nav a:hover { color: var(--cyan); }
+
+/* Перший екран */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px; align-items: start; padding-top: 28px; }
+.eyebrow { font-family: var(--mono); font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin-bottom: 14px; }
+h1 { font-weight: 800; font-size: clamp(2.3rem, 5.2vw, 3.7rem); letter-spacing: -.01em; }
+.glow-c { color: var(--cyan); text-shadow: 0 0 14px rgba(0,235,255,.55); }
+.glow-m { color: var(--magenta); text-shadow: 0 0 14px rgba(255,42,161,.55); }
+.lead { margin-top: 18px; max-width: 46ch; color: #c5cbea; font-size: 1.08rem; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; margin: 28px 0 0; padding: 0; }
+.facts div { border-left: 1px solid var(--line); padding-left: 14px; min-width: 0; }
+.facts dt { font-family: var(--mono); font-size: 1.7rem; color: var(--cyan); line-height: 1.1; }
+.facts dd { margin: 4px 0 0; color: var(--dim); font-size: .92rem; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+
+.btn {
+  font-family: var(--mono); font-size: 15px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--cyan); background: transparent; border: 1px solid var(--cyan); border-radius: 6px;
+  padding: 10px 18px; cursor: pointer; text-decoration: none; display: inline-block; line-height: 1.2;
+}
+.btn:hover:not(:disabled) { background: rgba(0,235,255,.12); }
+.btn.primary { background: var(--cyan); color: #031014; font-weight: 700; }
+.btn.primary:hover:not(:disabled) { background: #6ff4ff; }
+.btn:disabled { opacity: .35; cursor: default; }
+
+/* Ігрова картка */
+.game { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-shadow: 0 0 60px rgba(0,235,255,.07); min-width: 0; }
+.hud { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+.hud div { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; min-width: 0; }
+.hud .k { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.hud .v { display: block; font-family: var(--mono); font-size: 1.3rem; color: var(--cyan); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hud .v.pink { color: var(--magenta); }
+.hud .v.green { color: var(--green); }
+#board { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; border-radius: 6px; background: var(--bg); touch-action: none; cursor: pointer; }
+.controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.hint { margin-top: 12px; font-family: var(--mono); font-size: 13px; color: var(--dim); letter-spacing: .03em; }
+.dpad { display: none; margin: 14px auto 0; grid-template-columns: repeat(3, 60px); grid-template-areas: ". up ." "left down right"; gap: 8px; justify-content: center; }
+.dpad button { width: 60px; height: 52px; font-size: 22px; padding: 0; text-transform: none; }
+.dpad [data-dir="up"] { grid-area: up; }
+.dpad [data-dir="left"] { grid-area: left; }
+.dpad [data-dir="down"] { grid-area: down; }
+.dpad [data-dir="right"] { grid-area: right; }
+@media (hover: none), (pointer: coarse) { .dpad { display: grid; } }
+
+/* Секції */
+.section { padding-top: 64px; }
+.section > h2 { font-weight: 800; font-size: clamp(1.6rem, 3vw, 2.1rem); }
+.section > .intro { margin-top: 10px; color: #c5cbea; max-width: 62ch; }
+
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; margin-top: 26px; }
+.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 18px 20px; min-width: 0; }
+.rule h3 { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+.rule p { margin-top: 10px; color: #c5cbea; font-size: .97rem; }
+.sw { flex: none; width: 16px; height: 16px; display: inline-block; }
+.sw.food { background: #ff3c82; border-radius: 50%; box-shadow: 0 0 10px #ff3c82; }
+.sw.bonus { background: var(--gold); transform: rotate(45deg) scale(.78); box-shadow: 0 0 10px var(--gold); }
+.sw.speed { background: var(--green); border-radius: 4px; box-shadow: 0 0 10px var(--green); }
+.sw.wall { border: 2px solid var(--red); border-radius: 2px; box-shadow: 0 0 10px var(--red); }
+.sw.best { background: var(--magenta); border-radius: 3px; box-shadow: 0 0 10px var(--magenta); }
+.sw.keys { border: 2px solid var(--cyan); border-radius: 4px; box-shadow: 0 0 10px rgba(0,235,255,.7); }
+kbd { font-family: var(--mono); font-size: 14px; background: var(--surface2); border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 5px; padding: 1px 8px; color: var(--fg); display: inline-block; line-height: 1.5; }
+.keys-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+
+.tablebox { margin-top: 26px; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 15px; min-width: 520px; }
+th { text-align: left; font-weight: 400; color: var(--dim); text-transform: uppercase; letter-spacing: .08em; font-size: 13px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+td { padding: 9px 16px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+tr.now td { background: var(--surface2); }
+tr.now td:first-child { color: var(--cyan); text-shadow: 0 0 10px rgba(0,235,255,.6); }
+td.barcell { width: 38%; }
+.track { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.bar { height: 100%; background: var(--green); border-radius: 4px; box-shadow: 0 0 10px rgba(57,255,120,.5); }
+
+.run { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; margin-top: 26px; align-items: start; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; gap: 8px; min-width: 0; }
+.steps li > span { color: #c5cbea; }
+.steps li > span::before { content: counter(s) ". "; font-family: var(--mono); color: var(--cyan); }
+.code { display: flex; align-items: center; gap: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 10px 16px; }
+.code code { flex: 1; min-width: 0; overflow-x: auto; white-space: pre; font-family: var(--mono); font-size: 16px; color: var(--green); }
+.code .btn { padding: 6px 12px; font-size: 13px; flex: none; }
+.notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; color: #c5cbea; font-size: .97rem; }
+.notes li { border-left: 1px solid var(--line); padding-left: 14px; }
+
+.ideas { list-style: none; margin: 26px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.ideas li { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 3fr) auto; gap: 8px 24px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.ideas h3 { font-size: 1.05rem; font-weight: 600; }
+.ideas p { color: #c5cbea; font-size: .97rem; }
+.effort { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line); border-radius: 20px; padding: 2px 12px; white-space: nowrap; }
+
+/* Вкладки ігор і міні-гольф */
+[hidden] { display: none !important; }
+.arcade { min-width: 0; }
+.tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.tab { font-family: var(--mono); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 9px 18px; cursor: pointer; }
+.tab:hover { color: var(--fg); border-color: var(--dim); }
+.tab[aria-selected="true"] { color: var(--cyan); border-color: var(--cyan); background: rgba(0,235,255,.1); box-shadow: 0 0 14px rgba(0,235,255,.25); }
+#golfBoard { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; border-radius: 6px; background: var(--bg); touch-action: none; cursor: crosshair; }
+.power { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.power .k { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.ptrack { flex: 1; height: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.pbar { height: 100%; width: 50%; background: var(--green); border-radius: 6px; box-shadow: 0 0 10px rgba(57,255,120,.6); }
+.sw.sand { background: #c9a227; border-radius: 3px; box-shadow: 0 0 10px rgba(255,215,40,.6); }
+.sw.water { background: #2a7bff; border-radius: 3px; box-shadow: 0 0 10px #2a7bff; }
+.sw.mover { background: var(--cyan); border-radius: 2px; box-shadow: 0 0 10px var(--cyan); transform: scaleX(.5); }
+.sw.hole { border: 2px solid var(--green); border-radius: 50%; box-shadow: 0 0 10px var(--green); }
+td.res.under { color: var(--green); }
+td.res.even { color: var(--cyan); }
+td.res.over { color: var(--red); }
+td.res.none { color: var(--dim); }
+
+/* Адаптація під пристрої */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.game button, .game canvas, .tab, .dpad button {
+  -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none; touch-action: manipulation;
+}
+.hint .touch { display: none; }
+@media (hover: none), (pointer: coarse) {
+  .hint .kb { display: none; }
+  .hint .touch { display: inline; }
+  .btn, .tab { min-height: 44px; }
+  .nav a { padding-block: 10px; }
+}
+.fsbtn { margin-left: auto; }
+html.fs-lock, html.fs-lock body { overflow: hidden; }
+.arcade.fs {
+  position: fixed; inset: 0; z-index: 100; background: var(--bg); overflow: auto;
+  height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.arcade.fs .tabs, .arcade.fs > [role="tabpanel"] { width: 100%; max-width: 1100px; }
+@media (min-width: 1500px) {
+  .wrap { max-width: 1320px; }
+  body { font-size: 17px; }
+}
+@media (max-width: 380px) {
+  .hud .k { font-size: 11px; letter-spacing: .02em; }
+  .hud .v { font-size: .95rem; }
+  .tab { padding: 8px 12px; font-size: 13px; }
+  .btn { padding: 9px 12px; font-size: 13px; }
+  .facts { grid-template-columns: minmax(0, 1fr); }
+}
+/* Горизонтальний телефон і повноекранний режим у ландшафті: поле зліва, панель справа */
+@media (orientation: landscape) and (max-height: 540px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-top: 12px; }
+  .arcade { order: -1; }
+  .game { display: grid; grid-template-columns: minmax(0, 1fr) 220px; column-gap: 14px; align-items: start; }
+  .game > canvas {
+    grid-column: 1; grid-row: 1 / span 6; justify-self: center;
+    width: min(100%, calc((100vh - 60px) * 1.5)); width: min(100%, calc((100dvh - 60px) * 1.5));
+  }
+  .arcade.fs .game > canvas { width: min(100%, calc((100vh - 110px) * 1.5)); width: min(100%, calc((100dvh - 110px) * 1.5)); }
+  .game > :not(canvas) { grid-column: 2; }
+  .hud { grid-template-columns: 1fr 1fr; margin-bottom: 8px; }
+  .controls, .hint, .power { margin-top: 8px; }
+  .dpad { margin-top: 10px; }
+}
+
+.foot { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 13px; color: var(--dim); letter-spacing: .04em; }
+
+@media (max-width: 920px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .arcade { order: -1; }
+  .run { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .ideas li { grid-template-columns: minmax(0, 1fr); }
+  .effort { justify-self: start; }
+  .hud .v { font-size: 1.05rem; }
+  .hud div { padding: 6px 8px; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="14" viewBox="0 0 34 14" aria-hidden="true">
+        <rect x="0" y="1" width="10" height="12" rx="3" fill="#00aaff"/>
+        <rect x="12" y="1" width="10" height="12" rx="3" fill="#39ff78"/>
+        <rect x="24" y="1" width="10" height="12" rx="3" fill="#baffe1"/>
+      </svg>
+      NEON ARCADE
+    </div>
+    <nav class="nav" aria-label="Розділи">
+      <a href="#play">Гра</a>
+      <a href="#rules">Правила</a>
+      <a href="#golf">Міні-гольф</a>
+      <a href="#levels">Швидкість</a>
+      <a href="#run">Запуск на ПК</a>
+      <a href="#ideas">Ідеї</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="play">
+      <div>
+        <p class="eyebrow">Python · Pygame · Canvas</p>
+        <h1>Неонові ігри, які <span class="glow-c">світяться</span></h1>
+        <p class="lead">Змійка з версії для ПК і новий міні-гольф. Перемикайте ігри вкладками й грайте прямо в браузері, а змійку можна запустити і на комп'ютері.</p>
+        <dl class="facts">
+          <div><dt>2 гри</dt><dd>змійка і міні-гольф у вкладках</dd></div>
+          <div><dt>6 лунок</dt><dd>з піском, водою і рухомими стінами</dd></div>
+          <div><dt>5 с</dt><dd>живе бонус у змійці</dd></div>
+          <div><dt>55 мс</dt><dd>найшвидший крок змійки</dd></div>
+        </dl>
+        <div class="cta">
+          <a class="btn primary" href="#run">Змійка на ПК</a>
+          <a class="btn" href="#rules">Правила</a>
+        </div>
+      </div>
+
+      <div class="arcade" id="arcade">
+        <div class="tabs" role="tablist" aria-label="Ігри">
+          <button class="tab" role="tab" id="tabSnake" data-tab="snake" aria-selected="true" aria-controls="panel-snake" type="button">Змійка</button>
+          <button class="tab" role="tab" id="tabGolf" data-tab="golf" aria-selected="false" aria-controls="panel-golf" type="button">Міні-гольф</button>
+          <button class="tab fsbtn" id="btnFs" type="button" aria-pressed="false">На весь екран</button>
+        </div>
+        <div id="panel-snake" role="tabpanel" aria-labelledby="tabSnake">
+      <div class="game">
+        <div class="hud">
+          <div><span class="k">Рахунок</span><span class="v" id="hudScore">0000</span></div>
+          <div><span class="k">Рекорд</span><span class="v pink" id="hudBest">0000</span></div>
+          <div><span class="k">Рівень</span><span class="v green" id="hudLevel">1</span></div>
+          <div><span class="k">Крок</span><span class="v" id="hudSpeed">150 мс</span></div>
+        </div>
+        <canvas id="board" width="750" height="500" role="img" aria-label="Ігрове поле Neon Snake"></canvas>
+        <div class="controls">
+          <button class="btn primary" id="btnStart" type="button">Старт</button>
+          <button class="btn" id="btnPause" type="button" disabled>Пауза</button>
+          <button class="btn" id="btnSound" type="button" aria-pressed="true">Звук: так</button>
+        </div>
+        <div class="dpad" id="dpad" aria-label="Кнопки керування">
+          <button class="btn" type="button" data-dir="up" aria-label="Вгору">↑</button>
+          <button class="btn" type="button" data-dir="left" aria-label="Вліво">←</button>
+          <button class="btn" type="button" data-dir="down" aria-label="Вниз">↓</button>
+          <button class="btn" type="button" data-dir="right" aria-label="Вправо">→</button>
+        </div>
+        <p class="hint"><span class="kb">Стрілки або WASD · P: пауза · Enter: старт · Esc: меню.</span><span class="touch">Свайпайте по полю або користуйтесь кнопками. Дотик по полю ставить на паузу.</span></p>
+      </div>
+        </div>
+
+        <div id="panel-golf" role="tabpanel" aria-labelledby="tabGolf" hidden>
+          <div class="game">
+            <div class="hud">
+              <div><span class="k">Лунка</span><span class="v" id="golfHole">1/6</span></div>
+              <div><span class="k">Удари/пар</span><span class="v green" id="golfStrokes">0/2</span></div>
+              <div><span class="k">Загалом</span><span class="v" id="golfTotal">0</span></div>
+              <div><span class="k">Рекорд</span><span class="v pink" id="golfBest">—</span></div>
+            </div>
+            <canvas id="golfBoard" width="750" height="500" role="img" aria-label="Поле міні-гольфу"></canvas>
+            <div class="power"><span class="k">Сила</span><div class="ptrack"><div class="pbar" id="golfPower"></div></div></div>
+            <div class="controls">
+              <button class="btn primary" id="golfStart" type="button">Старт</button>
+              <button class="btn" id="golfSound" type="button" aria-pressed="true">Звук: так</button>
+            </div>
+            <p class="hint"><span class="kb">Тягніть від м'яча в протилежний бік і відпустіть. Або ←/→ чи A/D: приціл, ↑/↓ чи W/S: сила, Пробіл: удар, Esc: меню.</span><span class="touch">Покладіть палець на поле, відтягніть від м'яча в протилежний бік і відпустіть. Довша відтяжка означає сильніший удар.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="rules">
+      <h2>Правила змійки</h2>
+      <p class="intro">Кольори тут ті самі, що на полі: за ними легко впізнати, що є що.</p>
+      <div class="rules">
+        <article class="rule">
+          <h3><span class="sw keys"></span>Керування</h3>
+          <p>Змійка рухається по сітці. Розвернутися на 180° за один крок не можна, а швидкі повороти запам'ятовуються в черзі.</p>
+          <div class="keys-row" aria-label="Клавіші">
+            <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>P</kbd>
+          </div>
+        </article>
+        <article class="rule">
+          <h3><span class="sw food"></span>Їжа</h3>
+          <p>Рожева кулька з'являється у випадковій вільній клітинці. З'їли її: +10 очок, і змійка стає довшою на один сегмент.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw bonus"></span>Бонус</h3>
+          <p>Кожне четверте яблуко приносить золотий кристал. Він зникає через 5 секунд, а кільце навколо показує, скільки часу лишилось. За нього дають +50 очок.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw wall"></span>Програш</h3>
+          <p>Гра закінчується, коли голова торкається стіни або власного тіла. Клітинка, з якої хвіст саме відійшов, безпечна.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw speed"></span>Швидкість</h3>
+          <p>Кожні 5 з'їдених яблук крок стає коротшим на 10 мс, до межі 55 мс. Бонус на швидкість не впливає.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw best"></span>Рекорд</h3>
+          <p>У браузері рекорд лишається в цьому браузері. У версії для ПК він зберігається у файлі highscore.txt поруч зі скриптом.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="golf">
+      <h2>Міні-гольф</h2>
+      <p class="intro">Заженіть м'яч у лунку за якомога менше ударів. Шість лунок, на кожній свій пар. Підсумок порівнюється з сумою парів, а найкращий результат зберігається в цьому браузері.</p>
+      <div class="rules">
+        <article class="rule">
+          <h3><span class="sw keys"></span>Удар</h3>
+          <p>Натисніть на полі, відтягніть у бік, протилежний до напрямку удару, і відпустіть. Чим довша відтяжка, тим сильніший удар. З клавіатури: ←/→ приціл, ↑/↓ сила, Пробіл удар.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw sand"></span>Пісок</h3>
+          <p>Золоте покриття гальмує м'яч набагато сильніше за траву. Через пісок доведеться бити сильніше.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw water"></span>Вода</h3>
+          <p>Якщо м'яч опинився у воді, він повертається на місце попереднього удару, а до рахунку додається один штрафний удар.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw mover"></span>Рухомі стіни</h3>
+          <p>Блакитні перешкоди їздять угору й вниз, відбивають м'яч і можуть його підштовхнути. Вибирайте момент для удару.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw hole"></span>Лунка</h3>
+          <p>М'яч падає, якщо котиться достатньо повільно. Надто швидкий проскочить над лункою, а повільний трохи притягується до неї.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw best"></span>Рахунок</h3>
+          <p>Хоул-ін-ван, пташка, пар, богі: після кожної лунки видно, як ви зіграли відносно пару. Менше ударів означає краще.</p>
+        </article>
+      </div>
+      <div class="tablebox">
+        <table style="min-width: 420px">
+          <thead>
+            <tr><th>Лунка</th><th>Назва</th><th>Пар</th><th>Ваш результат</th></tr>
+          </thead>
+          <tbody id="holeRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="levels">
+      <h2>Швидкість у змійці</h2>
+      <p class="intro">Рівень залежить від кількості з'їдених яблук. Рядок підсвічується за вашим поточним рівнем у грі вище.</p>
+      <div class="tablebox">
+        <table>
+          <thead>
+            <tr><th>Рівень</th><th>Яблук</th><th>Крок, мс</th><th>Кроків за с</th><th>Темп</th></tr>
+          </thead>
+          <tbody id="speedRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="run">
+      <h2>Змійка на ПК</h2>
+      <p class="intro">Потрібні Python 3 і бібліотека Pygame. Уся графіка малюється кодом, зовнішніх файлів немає, звуки генеруються програмно.</p>
+      <div class="run">
+        <ol class="steps">
+          <li>
+            <span>Встановіть Pygame</span>
+            <div class="code"><code>pip install pygame</code><button class="btn" type="button" data-copy="pip install pygame">Копіювати</button></div>
+          </li>
+          <li>
+            <span>Покладіть main.py у будь-яку папку і запустіть</span>
+            <div class="code"><code>python main.py</code><button class="btn" type="button" data-copy="python main.py">Копіювати</button></div>
+          </li>
+        </ol>
+        <ul class="notes">
+          <li>У меню: Enter починає гру, Esc закриває вікно. Під час гри P ставить на паузу.</li>
+          <li>Вікно 750×500 плюс панель із рахунком зверху, 60 кадрів за секунду. Рух змійки йде за таймером, а не за кадрами.</li>
+          <li>Якщо звук запустити не вдалося, гра працює без нього.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="ideas">
+      <h2>Куди розвивати гру</h2>
+      <p class="intro">Ідеї, з яких можна почати. Праворуч приблизний обсяг роботи.</p>
+      <ul class="ideas">
+        <li><h3>Скіни і теми</h3><p>Вибір кольору змійки та палітри: синтвейв, кіберпанк, «матриця». Вибір зберігається у файлі.</p><span class="effort">Невеликий</span></li>
+        <li><h3>Бонуси з ефектами</h3><p>Сповільнення, подвійні очки, тимчасова невразливість, проходження крізь стіни.</p><span class="effort">Середній</span></li>
+        <li><h3>Рівні та перешкоди</h3><p>Карти зі стінами, лазерами або порталами, які відкриваються після певного рахунку.</p><span class="effort">Середній</span></li>
+        <li><h3>Таблиця рекордів</h3><p>Топ-10 з іменами та режим без стін, де змійка виходить з протилежного краю поля.</p><span class="effort">Середній</span></li>
+        <li><h3>Гольф на Pygame</h3><p>Перенести міні-гольф у версію для ПК: фізика м'яча й лунки переносяться майже без змін.</p><span class="effort">Середній</span></li>
+        <li><h3>Ще аркади</h3><p>Більярд, керлінг, пінбол: той самий принцип «прицілься і вдар» з іншими полями.</p><span class="effort">Середній</span></li>
+        <li><h3>Два гравці</h3><p>Друга змійка на WASD проти першої на стрілках: змагання за рахунок або за виживання.</p><span class="effort">Великий</span></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">Neon Snake · Python + Pygame на ПК · Canvas у браузері</footer>
+</div>
+
+<script>
+// Підганяє роздільність canvas під його реальний розмір на екрані (чітко на великих і щільних екранах)
+window.fitCanvas = function (canvas, ctx, W, H) {
+  function fit() {
+    var cw = canvas.clientWidth || W;
+    var s = Math.min(2, Math.max(1, cw * (window.devicePixelRatio || 1) / W));
+    s = Math.round(s * 4) / 4;
+    var nw = Math.round(W * s), nh = Math.round(H * s);
+    if (canvas.width !== nw) { canvas.width = nw; canvas.height = nh; }
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+  }
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(canvas);
+  else window.addEventListener('resize', fit);
+};
+(function () {
+  'use strict';
+
+  // Налаштування такі самі, як у версії для ПК
+  var COLS = 30, ROWS = 20, CELL = 25, W = COLS * CELL, H = ROWS * CELL;
+  var START = 150, STEP = 10, MIN = 55, PER_LEVEL = 5;
+  var BONUS_EVERY = 4, BONUS_MS = 5000, P_FOOD = 10, P_BONUS = 50;
+  var KEY = 'neon-snake-best';
+
+  var C = { bg: '#07070f', grid: '#10122a', cyan: '#00ebff', magenta: '#ff2aa1', pink: '#ff3c82',
+            green: '#39ff78', gold: '#ffd728', red: '#ff4658', head: '#baffe1', blue: '#00aaff' };
+  var DIRS = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } };
+  var DISPLAY = '"Exo 2", system-ui, sans-serif';
+  var MONO = '"Share Tech Mono", ui-monospace, Menlo, Consolas, monospace';
+
+  var canvas = document.getElementById('board');
+  var ctx = canvas.getContext('2d');
+  window.fitCanvas(canvas, ctx, W, H);
+
+  var elScore = document.getElementById('hudScore');
+  var elBest = document.getElementById('hudBest');
+  var elLevel = document.getElementById('hudLevel');
+  var elSpeed = document.getElementById('hudSpeed');
+  var btnStart = document.getElementById('btnStart');
+  var btnPause = document.getElementById('btnPause');
+  var btnSound = document.getElementById('btnSound');
+
+  var best = 0;
+  try { best = parseInt(localStorage.getItem(KEY) || '0', 10) || 0; } catch (e) {}
+
+  var state = 'idle';            // idle | play | pause | over
+  var snake, dir, queue, grow, food, bonus, score, apples, acc, newRecord, particles;
+  var t = 0, last = 0;
+
+  // ---------- Допоміжне ----------
+  function pad(n) { return String(n).padStart(4, '0'); }
+  function level() { return Math.floor(apples / PER_LEVEL) + 1; }
+  function intervalMs() { return Math.max(MIN, START - Math.floor(apples / PER_LEVEL) * STEP); }
+  function hex(c) { return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]; }
+  function mix(a, b, k) {
+    var x = hex(a), y = hex(b);
+    return 'rgb(' + Math.round(x[0] + (y[0] - x[0]) * k) + ',' + Math.round(x[1] + (y[1] - x[1]) * k) + ',' + Math.round(x[2] + (y[2] - x[2]) * k) + ')';
+  }
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h);
+  }
+
+  // ---------- Звук ----------
+  var audio = null, muted = false;
+  function ensureAudio() {
+    if (muted) return;
+    try {
+      if (!audio) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
+      if (audio && audio.state === 'suspended') audio.resume().catch(function () {});
+    } catch (e) { audio = null; }
+  }
+  function tone(f0, f1, dur, vol, delay) {
+    if (!audio || muted) return;
+    try {
+      var t0 = audio.currentTime + (delay || 0);
+      var o = audio.createOscillator(), g = audio.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f0, t0);
+      o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t0 + dur);
+      g.gain.setValueAtTime(vol || 0.12, t0);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(audio.destination);
+      o.start(t0); o.stop(t0 + dur);
+    } catch (e) {}
+  }
+  function sfxEat() { tone(500, 900, 0.09, 0.12); }
+  function sfxBonus() { tone(700, 700, 0.07, 0.12, 0); tone(1000, 1000, 0.07, 0.12, 0.07); tone(1400, 1400, 0.1, 0.12, 0.14); }
+  function sfxDead() { tone(420, 70, 0.55, 0.16); }
+
+  // ---------- Логіка ----------
+  function freeCell() {
+    var taken = {};
+    snake.forEach(function (s) { taken[s.x + ',' + s.y] = 1; });
+    if (food) taken[food.x + ',' + food.y] = 1;
+    if (bonus) taken[bonus.x + ',' + bonus.y] = 1;
+    var free = [];
+    for (var x = 0; x < COLS; x++) for (var y = 0; y < ROWS; y++) if (!taken[x + ',' + y]) free.push({ x: x, y: y });
+    return free.length ? free[Math.floor(Math.random() * free.length)] : null;
+  }
+  function spawnFood() {
+    var c = freeCell();
+    if (!c) { gameOver(); return; }
+    food = c;
+  }
+  function spawnBonus() {
+    var c = freeCell();
+    if (c) bonus = { x: c.x, y: c.y, left: BONUS_MS };
+  }
+  function reset() {
+    snake = [{ x: 15, y: 10 }, { x: 14, y: 10 }, { x: 13, y: 10 }];
+    dir = DIRS.right; queue = []; grow = 0; food = null; bonus = null;
+    score = 0; apples = 0; acc = 0; newRecord = false; particles = [];
+    spawnFood();
+    updateHud();
+  }
+  function setState(s) {
+    state = s;
+    btnStart.textContent = s === 'idle' ? 'Старт' : 'Заново';
+    btnPause.disabled = !(s === 'play' || s === 'pause');
+    btnPause.textContent = s === 'pause' ? 'Далі' : 'Пауза';
+  }
+  function start() { ensureAudio(); reset(); setState('play'); }
+  function togglePause() {
+    if (state === 'play') setState('pause');
+    else if (state === 'pause') setState('play');
+  }
+  function toMenu() { setState('idle'); }
+  function gameOver() {
+    setState('over');
+    sfxDead();
+    if (score > best) {
+      best = score; newRecord = true;
+      try { localStorage.setItem(KEY, String(best)); } catch (e) {}
+    }
+    updateHud();
+  }
+  function turn(d) {
+    if (state !== 'play') return;
+    var lastDir = queue.length ? queue[queue.length - 1] : dir;
+    if (d === lastDir) return;
+    if (d.x + lastDir.x === 0 && d.y + lastDir.y === 0) return;   // розворот на 180° заборонений
+    if (queue.length < 2) queue.push(d);
+  }
+  function burst(cell, color, n) {
+    var cx = cell.x * CELL + CELL / 2, cy = cell.y * CELL + CELL / 2;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, sp = 0.05 + Math.random() * 0.17;
+      particles.push({ x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 300 + Math.random() * 350, color: color });
+    }
+  }
+  function step() {
+    if (queue.length) dir = queue.shift();
+    var h = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    snake.unshift(h);
+    if (grow > 0) grow--; else snake.pop();
+    var hitWall = h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS;
+    var hitSelf = !hitWall && snake.slice(1).some(function (s) { return s.x === h.x && s.y === h.y; });
+    if (hitWall || hitSelf) { gameOver(); return; }
+    if (h.x === food.x && h.y === food.y) {
+      score += P_FOOD; apples++; grow++;
+      sfxEat(); burst(food, C.pink, 14);
+      spawnFood();
+      if (state === 'play' && apples % BONUS_EVERY === 0 && !bonus) spawnBonus();
+      updateHud();
+    } else if (bonus && h.x === bonus.x && h.y === bonus.y) {
+      score += P_BONUS; grow++;
+      sfxBonus(); burst(bonus, C.gold, 22);
+      bonus = null;
+      updateHud();
+    }
+  }
+  function update(dt) {
+    for (var i = particles.length - 1; i >= 0; i--) {
+      var p = particles[i];
+      p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+    if (state !== 'play') return;
+    if (bonus) { bonus.left -= dt; if (bonus.left <= 0) bonus = null; }
+    acc += dt;                       // рух за таймером, а не за кадрами
+    var iv = intervalMs();
+    while (acc >= iv && state === 'play') { acc -= iv; step(); iv = intervalMs(); }
+  }
+
+  // ---------- Інтерфейс ----------
+  var rowsEl = document.getElementById('speedRows');
+  var MAXLV = 11;
+  (function buildTable() {
+    var html = '';
+    for (var n = 1; n <= MAXLV; n++) {
+      var iv = Math.max(MIN, START - (n - 1) * STEP);
+      var sps = 1000 / iv;
+      var pct = Math.round(sps / (1000 / MIN) * 100);
+      var lv = n === MAXLV ? n + '+' : String(n);
+      var ap = n === MAXLV ? ((n - 1) * PER_LEVEL) + '+' : ((n - 1) * PER_LEVEL) + '–' + (n * PER_LEVEL - 1);
+      html += '<tr data-level="' + n + '"><td>' + lv + '</td><td>' + ap + '</td><td>' + iv + '</td><td>' + sps.toFixed(1) +
+              '</td><td class="barcell"><div class="track"><div class="bar" style="width:' + pct + '%"></div></div></td></tr>';
+    }
+    rowsEl.innerHTML = html;
+  })();
+  function updateHud() {
+    elScore.textContent = pad(score);
+    elBest.textContent = pad(best);
+    elLevel.textContent = level();
+    elSpeed.textContent = intervalMs() + ' мс';
+    var cur = Math.min(level(), MAXLV);
+    var rows = rowsEl.children;
+    for (var i = 0; i < rows.length; i++) rows[i].classList.toggle('now', Number(rows[i].getAttribute('data-level')) === cur);
+  }
+
+  // ---------- Малювання ----------
+  function glowText(text, x, y, font, color, blur) {
+    ctx.save();
+    ctx.font = font; ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = blur;
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+  function drawBoard() {
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (var i = 0; i <= COLS; i++) { ctx.moveTo(i * CELL + 0.5, 0); ctx.lineTo(i * CELL + 0.5, H); }
+    for (var j = 0; j <= ROWS; j++) { ctx.moveTo(0, j * CELL + 0.5); ctx.lineTo(W, j * CELL + 0.5); }
+    ctx.stroke();
+    ctx.save();
+    ctx.shadowColor = C.cyan; ctx.shadowBlur = 16; ctx.strokeStyle = C.cyan; ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, W - 2, H - 2);
+    ctx.restore();
+  }
+  function drawFood() {
+    if (!food) return;
+    var cx = food.x * CELL + CELL / 2, cy = food.y * CELL + CELL / 2;
+    var pulse = 0.5 + 0.5 * Math.sin(t / 180);
+    var r = 7 + 2 * pulse;
+    ctx.save();
+    ctx.shadowColor = C.pink; ctx.shadowBlur = 14 + 6 * pulse;
+    ctx.fillStyle = C.pink;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(cx - 2, cy - 2, 2, 0, Math.PI * 2); ctx.fill();
+  }
+  function drawBonus() {
+    if (!bonus) return;
+    if (bonus.left < 1500 && Math.floor(t / 110) % 2 === 0) return;   // блимає перед зникненням
+    var cx = bonus.x * CELL + CELL / 2, cy = bonus.y * CELL + CELL / 2;
+    var pulse = 0.5 + 0.5 * Math.sin(t / 180);
+    var s = 9 + 2 * pulse;
+    ctx.save();
+    ctx.shadowColor = C.gold; ctx.shadowBlur = 16 + 6 * pulse;
+    ctx.fillStyle = '#8f7712'; ctx.strokeStyle = C.gold; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - s); ctx.lineTo(cx + s, cy); ctx.lineTo(cx, cy + s); ctx.lineTo(cx - s, cy); ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(cx, cy, 2, 0, Math.PI * 2); ctx.fill();
+    var frac = Math.max(0, bonus.left / BONUS_MS);
+    if (frac > 0.02) {
+      ctx.strokeStyle = C.gold; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, CELL / 2 - 1, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * frac); ctx.stroke();
+    }
+  }
+  function drawSnake() {
+    var n = snake.length, i, s, k, col, px, py;
+    for (i = n - 1; i >= 0; i--) {
+      s = snake[i];
+      if (s.x < 0 || s.x >= COLS || s.y < 0 || s.y >= ROWS) continue;
+      k = i / Math.max(1, n - 1);
+      col = i === 0 ? C.head : mix(C.green, C.blue, k);
+      px = s.x * CELL; py = s.y * CELL;
+      ctx.save();
+      ctx.shadowColor = col; ctx.shadowBlur = 14;
+      ctx.fillStyle = i === 0 ? '#5c8f7f' : mix('#0f5a2d', '#004a73', k);
+      rr(px + 2, py + 2, CELL - 4, CELL - 4, 7); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = col;
+      rr(px + 5, py + 5, CELL - 10, CELL - 10, 5); ctx.fill();
+      ctx.strokeStyle = col; ctx.lineWidth = 2;
+      rr(px + 2, py + 2, CELL - 4, CELL - 4, 7); ctx.stroke();
+    }
+    var h = snake[0];
+    if (h.x >= 0 && h.x < COLS && h.y >= 0 && h.y < ROWS) {
+      var cx = h.x * CELL + CELL / 2, cy = h.y * CELL + CELL / 2;
+      var qx = -dir.y, qy = dir.x;
+      [-1, 1].forEach(function (side) {
+        var ex = cx + dir.x * 5 + qx * 5 * side, ey = cy + dir.y * 5 + qy * 5 * side;
+        ctx.fillStyle = '#080814';
+        ctx.beginPath(); ctx.arc(ex, ey, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(ex + dir.x, ey + dir.y, 1, 0, Math.PI * 2); ctx.fill();
+      });
+    }
+  }
+  function drawParticles() {
+    particles.forEach(function (p) {
+      var k = Math.max(0, Math.min(1, p.life / 650));
+      ctx.globalAlpha = k;
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1 + 3 * k, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+  function drawOverlay() {
+    if (state === 'play') return;
+    ctx.fillStyle = 'rgba(4,4,12,0.74)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var cx = W / 2, cy = H / 2;
+    if (state === 'idle') {
+      var pk = 0.5 + 0.5 * Math.sin(t / 400);
+      glowText('NEON SNAKE', cx, cy - 70, '800 64px ' + DISPLAY, mix(C.cyan, C.magenta, pk), 22);
+      glowText('Enter або клік: старт', cx, cy + 10, '28px ' + MONO, C.green, 12);
+      glowText('Рекорд: ' + best, cx, cy + 58, '22px ' + MONO, C.gold, 10);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '16px ' + MONO;
+      ctx.fillText('Стрілки / WASD · P: пауза', cx, cy + 110);
+    } else if (state === 'pause') {
+      glowText('ПАУЗА', cx, cy - 20, '800 64px ' + DISPLAY, C.cyan, 22);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '20px ' + MONO;
+      ctx.fillText('P: продовжити · Esc: меню', cx, cy + 40);
+    } else if (state === 'over') {
+      glowText('GAME OVER', cx, cy - 90, '800 64px ' + DISPLAY, C.red, 22);
+      glowText('Рахунок: ' + score, cx, cy - 20, '28px ' + MONO, C.cyan, 10);
+      glowText('Рекорд: ' + best, cx, cy + 20, '28px ' + MONO, C.magenta, 10);
+      if (newRecord && Math.floor(t / 350) % 2 === 0) glowText('★ НОВИЙ РЕКОРД! ★', cx, cy + 62, '22px ' + MONO, C.gold, 12);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '20px ' + MONO;
+      ctx.fillText('Enter: грати знову · Esc: меню', cx, cy + 110);
+    }
+  }
+  function draw() {
+    drawBoard();
+    drawFood();
+    drawBonus();
+    drawSnake();
+    drawParticles();
+    drawOverlay();
+  }
+
+  // ---------- Цикл ----------
+  function frame(ts) {
+    if (document.getElementById('panel-snake').hidden) { last = ts; requestAnimationFrame(frame); return; }
+    var dt = Math.min(ts - (last || ts), 100);
+    last = ts; t += dt;
+    update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- Керування ----------
+  var KEYS = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
+  document.addEventListener('keydown', function (e) {
+    if (document.getElementById('panel-snake').hidden) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var name = KEYS[e.code];
+    if (name) {
+      if (state === 'play') { e.preventDefault(); turn(DIRS[name]); }
+      else if (state === 'pause' && e.code.indexOf('Arrow') === 0) e.preventDefault();
+      return;
+    }
+    if (e.code === 'KeyP') { if (state === 'play' || state === 'pause') { e.preventDefault(); togglePause(); } return; }
+    if (e.code === 'Escape') { if (state !== 'idle') toMenu(); return; }
+    if (e.code === 'Enter' || e.code === 'NumpadEnter') {
+      if (e.target && e.target.closest && e.target.closest('a,button')) return;   // кнопка спрацює сама
+      if (state === 'idle' || state === 'over') { e.preventDefault(); start(); }
+    }
+  });
+  document.addEventListener('visibilitychange', function () { if (document.hidden && state === 'play') setState('pause'); });
+  window.addEventListener('arcade-tab', function (e) { if (e.detail !== 'snake' && state === 'play') setState('pause'); });
+
+  btnStart.addEventListener('click', start);
+  btnPause.addEventListener('click', togglePause);
+  btnSound.addEventListener('click', function () {
+    muted = !muted;
+    btnSound.textContent = muted ? 'Звук: ні' : 'Звук: так';
+    btnSound.setAttribute('aria-pressed', muted ? 'false' : 'true');
+    if (!muted) ensureAudio();
+  });
+
+  // Свайпи й дотики по полю (працює і для миші)
+  var px0 = 0, py0 = 0;
+  canvas.addEventListener('pointerdown', function (e) { px0 = e.clientX; py0 = e.clientY; });
+  canvas.addEventListener('pointerup', function (e) {
+    var dx = e.clientX - px0, dy = e.clientY - py0;
+    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
+      if (state === 'idle' || state === 'over') start();
+      else togglePause();
+      return;
+    }
+    if (Math.abs(dx) > Math.abs(dy)) turn(dx > 0 ? DIRS.right : DIRS.left);
+    else turn(dy > 0 ? DIRS.down : DIRS.up);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#dpad [data-dir]'), function (b) {
+    b.addEventListener('pointerdown', function (e) { e.preventDefault(); turn(DIRS[b.getAttribute('data-dir')]); });
+  });
+
+  // Кнопки копіювання команд
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (b) {
+    b.addEventListener('click', function () {
+      var orig = b.textContent;
+      function done(msg) { b.textContent = msg; setTimeout(function () { b.textContent = orig; }, 1800); }
+      function select() {
+        var code = b.parentElement.querySelector('code');
+        if (code) {
+          var r = document.createRange(); r.selectNodeContents(code);
+          var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        }
+        done('Виділено');
+      }
+      try {
+        navigator.clipboard.writeText(b.getAttribute('data-copy')).then(function () { done('Скопійовано'); }, select);
+      } catch (e) { select(); }
+    });
+  });
+
+  reset();
+  setState('idle');
+  requestAnimationFrame(frame);
+})();
+
+// ======================= Вкладки ігор =======================
+(function () {
+  'use strict';
+  var tabs = document.querySelectorAll('[data-tab]');
+  var panels = { snake: document.getElementById('panel-snake'), golf: document.getElementById('panel-golf') };
+  function select(name) {
+    Array.prototype.forEach.call(tabs, function (b) {
+      b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false');
+    });
+    Object.keys(panels).forEach(function (k) { panels[k].hidden = k !== name; });
+    window.dispatchEvent(new CustomEvent('arcade-tab', { detail: name }));
+  }
+  Array.prototype.forEach.call(tabs, function (b) {
+    b.addEventListener('click', function () { select(b.getAttribute('data-tab')); b.blur(); });
+  });
+
+  // Режим «на весь екран»: накладка на сторінку + справжній fullscreen, де він підтримується
+  var arcade = document.getElementById('arcade');
+  var btnFs = document.getElementById('btnFs');
+  function setFs(on) {
+    arcade.classList.toggle('fs', on);
+    document.documentElement.classList.toggle('fs-lock', on);
+    btnFs.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btnFs.textContent = on ? 'Вийти' : 'На весь екран';
+    if (on) {
+      try { var pr = arcade.requestFullscreen && arcade.requestFullscreen(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+    } else if (document.fullscreenElement) {
+      try { document.exitFullscreen(); } catch (e) {}
+    }
+  }
+  btnFs.addEventListener('click', function () { setFs(!arcade.classList.contains('fs')); btnFs.blur(); });
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement && arcade.classList.contains('fs')) setFs(false);
+  });
+})();
+
+// ======================= Міні-гольф =======================
+(function () {
+  'use strict';
+  var W = 750, H = 500, BM = 12, BALL_R = 7, HOLE_R = 11;
+  var DEC = 400, SAND_DEC = 1500, STOP = 14, MINV = 70, MAXV = 780, SINK_V = 340, REST = 0.82;
+  var KEY = 'neon-golf-best';
+  var C = { bg: '#07070f', grid: '#10122a', cyan: '#00ebff', magenta: '#ff2aa1', pink: '#ff3c82',
+            green: '#39ff78', gold: '#ffd728', red: '#ff4658', blue: '#2a7bff' };
+  var DISPLAY = '"Exo 2", system-ui, sans-serif';
+  var MONO = '"Share Tech Mono", ui-monospace, Menlo, Consolas, monospace';
+
+  // Лунки: стіни, пісок і вода задані прямокутниками [x, y, ширина, висота]
+  var HOLES = [
+    { name: 'Пряма', par: 2, start: [90, 250], hole: [650, 250], walls: [], sand: [], water: [], movers: [] },
+    { name: 'Прохід у стіні', par: 3, start: [90, 250], hole: [660, 250],
+      walls: [[360, 12, 24, 190], [360, 298, 24, 190]], sand: [], water: [], movers: [] },
+    { name: 'Пісок', par: 3, start: [90, 420], hole: [650, 90],
+      walls: [[470, 250, 24, 238]], sand: [[280, 140, 170, 230]], water: [], movers: [] },
+    { name: 'Вода', par: 3, start: [90, 420], hole: [660, 80],
+      walls: [], sand: [], water: [[330, 12, 110, 196], [330, 292, 110, 196]], movers: [] },
+    { name: 'Зигзаг', par: 5, start: [80, 430], hole: [670, 70],
+      walls: [[180, 12, 24, 340], [360, 150, 24, 338], [540, 12, 24, 340]], sand: [], water: [], movers: [] },
+    { name: 'Рухомі стіни', par: 3, start: [90, 250], hole: [660, 250], walls: [], sand: [], water: [],
+      movers: [{ x: 340, w: 22, h: 140, cy: 250, amp: 170, om: 1.6, ph: 0 },
+               { x: 500, w: 22, h: 140, cy: 250, amp: 170, om: 1.6, ph: Math.PI }] }
+  ];
+
+  var panel = document.getElementById('panel-golf');
+  var canvas = document.getElementById('golfBoard');
+  var ctx = canvas.getContext('2d');
+  window.fitCanvas(canvas, ctx, W, H);
+
+  var elHole = document.getElementById('golfHole');
+  var elStrokes = document.getElementById('golfStrokes');
+  var elTotal = document.getElementById('golfTotal');
+  var elBest = document.getElementById('golfBest');
+  var elPower = document.getElementById('golfPower');
+  var btnStart = document.getElementById('golfStart');
+  var btnSound = document.getElementById('golfSound');
+  var rowsEl = document.getElementById('holeRows');
+
+  var best = 0;
+  try { best = parseInt(localStorage.getItem(KEY) || '0', 10) || 0; } catch (e) {}
+
+  var state = 'idle';               // idle | play | sunk | done
+  var hi = 0, strokes = 0, scores = [];
+  var ball = { x: 0, y: 0, vx: 0, vy: 0 }, lastRest = { x: 0, y: 0 };
+  var aim = 0, power = 0.5, dragging = false, dragAim = 0, dragPower = 0;
+  var gt = 0, t = 0, last = 0, sunkTimer = 0, flash = null, newBest = false, keys = {};
+
+  // ---------- Допоміжне ----------
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function hex(c) { return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]; }
+  function mix(a, b, k) {
+    var x = hex(a), y = hex(b);
+    return 'rgb(' + Math.round(x[0] + (y[0] - x[0]) * k) + ',' + Math.round(x[1] + (y[1] - x[1]) * k) + ',' + Math.round(x[2] + (y[2] - x[2]) * k) + ')';
+  }
+  function inRect(px, py, r) { return px >= r[0] && px <= r[0] + r[2] && py >= r[1] && py <= r[1] + r[3]; }
+  function inAny(list, px, py) { for (var i = 0; i < list.length; i++) if (inRect(px, py, list[i])) return true; return false; }
+  function moverRect(m, ts) {
+    var a = m.om * ts + m.ph;
+    return { x: m.x, y: m.cy + m.amp * Math.sin(a) - m.h / 2, w: m.w, h: m.h, vy: m.amp * m.om * Math.cos(a) };
+  }
+  function moving() { return ball.vx !== 0 || ball.vy !== 0; }
+  function canAim() { return state === 'play' && !moving(); }
+
+  // ---------- Звук ----------
+  var audio = null, muted = false, lastTick = 0;
+  function ensureAudio() {
+    if (muted) return;
+    try {
+      if (!audio) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
+      if (audio && audio.state === 'suspended') audio.resume().catch(function () {});
+    } catch (e) { audio = null; }
+  }
+  function tone(f0, f1, dur, vol, delay) {
+    if (!audio || muted) return;
+    try {
+      var t0 = audio.currentTime + (delay || 0);
+      var o = audio.createOscillator(), g = audio.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f0, t0);
+      o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t0 + dur);
+      g.gain.setValueAtTime(vol || 0.12, t0);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(audio.destination);
+      o.start(t0); o.stop(t0 + dur);
+    } catch (e) {}
+  }
+  function sfxHit(pw) { tone(180 + 220 * pw, 80, 0.09, 0.14); }
+  function sfxSink() { tone(600, 600, 0.08, 0.12, 0); tone(800, 800, 0.08, 0.12, 0.08); tone(1100, 1100, 0.14, 0.12, 0.16); }
+  function sfxSplash() { tone(520, 90, 0.35, 0.12); }
+  function sfxTick() {
+    var now = Date.now();
+    if (now - lastTick < 60) return;
+    lastTick = now; tone(900, 650, 0.03, 0.06);
+  }
+
+  // ---------- Лунки і результати ----------
+  (function buildTable() {
+    var html = '';
+    HOLES.forEach(function (h, i) {
+      html += '<tr><td>' + (i + 1) + '</td><td>' + h.name + '</td><td>' + h.par + '</td><td class="res none" id="res-' + i + '">—</td></tr>';
+    });
+    rowsEl.innerHTML = html;
+  })();
+  function setResult(i, val) {
+    var el = document.getElementById('res-' + i);
+    if (!el) return;
+    if (val === null) { el.textContent = '—'; el.className = 'res none'; return; }
+    var d = val - HOLES[i].par;
+    el.textContent = val + (d === 0 ? ' (пар)' : d > 0 ? ' (+' + d + ')' : ' (' + d + ')');
+    el.className = 'res ' + (d < 0 ? 'under' : d === 0 ? 'even' : 'over');
+  }
+  function sumScores() { return scores.reduce(function (a, b) { return a + b; }, 0); }
+  function totalNow() { return sumScores() + (scores[hi] === undefined ? strokes : 0); }
+  function updateHud() {
+    elHole.textContent = Math.min(hi + 1, HOLES.length) + '/' + HOLES.length;
+    elStrokes.textContent = strokes + '/' + HOLES[Math.min(hi, HOLES.length - 1)].par;
+    elTotal.textContent = totalNow();
+    elBest.textContent = best ? best : '—';
+  }
+  function setState(s) {
+    state = s;
+    btnStart.textContent = s === 'idle' ? 'Старт' : 'Заново';
+  }
+  function loadHole(i) {
+    hi = i;
+    var h = HOLES[i];
+    ball.x = h.start[0]; ball.y = h.start[1]; ball.vx = 0; ball.vy = 0;
+    lastRest = { x: ball.x, y: ball.y };
+    strokes = 0; flash = null;
+    aim = Math.atan2(h.hole[1] - h.start[1], h.hole[0] - h.start[0]);
+    power = 0.5;
+    updateHud();
+  }
+  function start() {
+    ensureAudio();
+    scores = []; newBest = false;
+    HOLES.forEach(function (h, i) { setResult(i, null); });
+    loadHole(0);
+    setState('play');
+  }
+  function toMenu() { dragging = false; setState('idle'); }
+  function showFlash(text, color) { flash = { text: text, color: color, t0: t }; }
+  function label(s, par) {
+    if (s === 1) return ['Хоул-ін-ван!', C.gold];
+    var d = s - par;
+    if (d <= -2) return ['Орел!', C.gold];
+    if (d === -1) return ['Пташка!', C.green];
+    if (d === 0) return ['Пар', C.cyan];
+    if (d === 1) return ['Богі', C.magenta];
+    return ['+' + d, C.red];
+  }
+  function sink() {
+    var h = HOLES[hi];
+    ball.x = h.hole[0]; ball.y = h.hole[1]; ball.vx = 0; ball.vy = 0;
+    scores[hi] = strokes;
+    setResult(hi, strokes);
+    var lb = label(strokes, h.par);
+    showFlash(lb[0], lb[1]);
+    sfxSink();
+    sunkTimer = 1400;
+    setState('sunk');
+    updateHud();
+  }
+  function nextHole() {
+    if (hi + 1 < HOLES.length) { setState('play'); loadHole(hi + 1); return; }
+    var total = sumScores();
+    if (!best || total < best) {
+      best = total; newBest = true;
+      try { localStorage.setItem(KEY, String(best)); } catch (e) {}
+    }
+    setState('done');
+    updateHud();
+  }
+  function splash() {
+    strokes++;
+    ball.x = lastRest.x; ball.y = lastRest.y; ball.vx = 0; ball.vy = 0;
+    showFlash('Вода! +1', C.blue);
+    sfxSplash();
+    updateHud();
+  }
+  function shoot() {
+    if (!canAim()) return;
+    var a = aim, pw = power;
+    var v = MINV + pw * (MAXV - MINV);
+    lastRest = { x: ball.x, y: ball.y };
+    ball.vx = Math.cos(a) * v; ball.vy = Math.sin(a) * v;
+    strokes++;
+    sfxHit(pw);
+    updateHud();
+  }
+
+  // ---------- Фізика ----------
+  function collide(r, rvy) {
+    var cx = Math.max(r.x, Math.min(ball.x, r.x + r.w)), cy = Math.max(r.y, Math.min(ball.y, r.y + r.h));
+    var dx = ball.x - cx, dy = ball.y - cy, d2 = dx * dx + dy * dy, nx, ny;
+    if (d2 >= BALL_R * BALL_R) return;
+    if (d2 === 0) {      // центр усередині прямокутника: виштовхуємо найкоротшим шляхом
+      var l = ball.x - r.x, rt = r.x + r.w - ball.x, tp = ball.y - r.y, bt = r.y + r.h - ball.y;
+      var m = Math.min(l, rt, tp, bt);
+      if (m === l) { nx = -1; ny = 0; ball.x = r.x - BALL_R; }
+      else if (m === rt) { nx = 1; ny = 0; ball.x = r.x + r.w + BALL_R; }
+      else if (m === tp) { nx = 0; ny = -1; ball.y = r.y - BALL_R; }
+      else { nx = 0; ny = 1; ball.y = r.y + r.h + BALL_R; }
+    } else {
+      var d = Math.sqrt(d2);
+      nx = dx / d; ny = dy / d;
+      var pen = BALL_R - d;
+      ball.x += nx * pen; ball.y += ny * pen;
+    }
+    var vn = ball.vx * nx + (ball.vy - rvy) * ny;   // швидкість відносно перешкоди
+    if (vn < 0) {
+      ball.vx -= (1 + REST) * vn * nx;
+      ball.vy -= (1 + REST) * vn * ny;
+      if (-vn > 140) sfxTick();
+    }
+  }
+  function physics(dt) {
+    var n = 4, h = dt / n, hl = HOLES[hi];
+    for (var i = 0; i < n && state === 'play'; i++) {
+      var ts = gt + i * h;
+      ball.x += ball.vx * h; ball.y += ball.vy * h;
+      var sp = Math.hypot(ball.vx, ball.vy);
+      if (sp > 0) {
+        var dec = inAny(hl.sand, ball.x, ball.y) ? SAND_DEC : DEC;
+        var ns = sp - dec * h;
+        if (ns < STOP) { ball.vx = 0; ball.vy = 0; }
+        else { var k = ns / sp; ball.vx *= k; ball.vy *= k; }
+      }
+      // зовнішні бортики
+      if (ball.x < BM + BALL_R) { ball.x = BM + BALL_R; if (ball.vx < 0) { ball.vx = -ball.vx * REST; sfxTick(); } }
+      if (ball.x > W - BM - BALL_R) { ball.x = W - BM - BALL_R; if (ball.vx > 0) { ball.vx = -ball.vx * REST; sfxTick(); } }
+      if (ball.y < BM + BALL_R) { ball.y = BM + BALL_R; if (ball.vy < 0) { ball.vy = -ball.vy * REST; sfxTick(); } }
+      if (ball.y > H - BM - BALL_R) { ball.y = H - BM - BALL_R; if (ball.vy > 0) { ball.vy = -ball.vy * REST; sfxTick(); } }
+      hl.walls.forEach(function (w) { collide({ x: w[0], y: w[1], w: w[2], h: w[3] }, 0); });
+      hl.movers.forEach(function (m) { var r = moverRect(m, ts); collide(r, r.vy); });
+      if (inAny(hl.water, ball.x, ball.y)) { splash(); return; }
+      var dx = hl.hole[0] - ball.x, dy = hl.hole[1] - ball.y, d = Math.hypot(dx, dy);
+      var sp2 = Math.hypot(ball.vx, ball.vy);
+      if (d < HOLE_R && sp2 < SINK_V) { sink(); return; }
+      if (d < HOLE_R + 10 && sp2 > 0 && sp2 < SINK_V * 0.7) {      // легке притягування до лунки
+        var pull = 500 * h / Math.max(d, 1);
+        ball.vx += dx * pull; ball.vy += dy * pull;
+      }
+    }
+  }
+  function update(dt) {
+    var dts = Math.min(dt, 50) / 1000;
+    if (state === 'play') {
+      if (canAim()) {
+        var rot = (keys.ArrowLeft || keys.KeyA ? -1 : 0) + (keys.ArrowRight || keys.KeyD ? 1 : 0);
+        aim += rot * 1.8 * dts;
+        var pw = (keys.ArrowUp || keys.KeyW ? 1 : 0) - (keys.ArrowDown || keys.KeyS ? 1 : 0);
+        power = clamp(power + pw * 0.7 * dts, 0.05, 1);
+      }
+      physics(dts);
+    } else if (state === 'sunk') {
+      sunkTimer -= dt;
+      if (sunkTimer <= 0) nextHole();
+    }
+    gt += dts;
+  }
+
+  // ---------- Малювання ----------
+  function glowText(text, x, y, font, color, blur) {
+    ctx.save();
+    ctx.font = font; ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = blur;
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+  function neonRect(x, y, w, h, fill, stroke, blur) {
+    ctx.save();
+    ctx.fillStyle = fill; ctx.fillRect(x, y, w, h);
+    ctx.shadowColor = stroke; ctx.shadowBlur = blur; ctx.strokeStyle = stroke; ctx.lineWidth = 2;
+    ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+    ctx.restore();
+  }
+  function drawCourse(hl) {
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (var i = 0; i <= W / 25; i++) { ctx.moveTo(i * 25 + 0.5, 0); ctx.lineTo(i * 25 + 0.5, H); }
+    for (var j = 0; j <= H / 25; j++) { ctx.moveTo(0, j * 25 + 0.5); ctx.lineTo(W, j * 25 + 0.5); }
+    ctx.stroke();
+    // трава
+    ctx.fillStyle = '#08161f'; ctx.fillRect(BM, BM, W - 2 * BM, H - 2 * BM);
+    for (var x = BM, n = 0; x < W - BM; x += 50, n++) {
+      if (n % 2 === 0) { ctx.fillStyle = 'rgba(57,255,120,0.04)'; ctx.fillRect(x, BM, Math.min(50, W - BM - x), H - 2 * BM); }
+    }
+    // пісок
+    hl.sand.forEach(function (r) {
+      ctx.fillStyle = '#2c2511'; ctx.fillRect(r[0], r[1], r[2], r[3]);
+      ctx.save(); ctx.setLineDash([6, 6]); ctx.strokeStyle = 'rgba(255,215,40,0.7)'; ctx.lineWidth = 2;
+      ctx.strokeRect(r[0] + 1, r[1] + 1, r[2] - 2, r[3] - 2); ctx.restore();
+      ctx.fillStyle = 'rgba(255,215,40,0.25)';
+      for (var px = r[0] + 12; px < r[0] + r[2] - 6; px += 18) for (var py = r[1] + 12; py < r[1] + r[3] - 6; py += 18) ctx.fillRect(px + ((py / 18) % 2) * 6, py, 2, 2);
+    });
+    // вода з хвилями
+    hl.water.forEach(function (r) {
+      ctx.fillStyle = '#06264d'; ctx.fillRect(r[0], r[1], r[2], r[3]);
+      ctx.save();
+      ctx.beginPath(); ctx.rect(r[0], r[1], r[2], r[3]); ctx.clip();
+      ctx.strokeStyle = 'rgba(42,123,255,0.55)'; ctx.lineWidth = 1.5;
+      for (var wy = r[1] + 10; wy < r[1] + r[3]; wy += 18) {
+        ctx.beginPath();
+        for (var wx = r[0]; wx <= r[0] + r[2]; wx += 6) {
+          var yy = wy + Math.sin(wx / 12 + t / 400 + wy) * 3;
+          if (wx === r[0]) ctx.moveTo(wx, yy); else ctx.lineTo(wx, yy);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.save(); ctx.shadowColor = C.blue; ctx.shadowBlur = 12; ctx.strokeStyle = C.blue; ctx.lineWidth = 2;
+      ctx.strokeRect(r[0] + 1, r[1] + 1, r[2] - 2, r[3] - 2); ctx.restore();
+    });
+    // зовнішня рамка
+    ctx.save();
+    ctx.shadowColor = C.cyan; ctx.shadowBlur = 16; ctx.strokeStyle = C.cyan; ctx.lineWidth = 2;
+    ctx.strokeRect(BM, BM, W - 2 * BM, H - 2 * BM);
+    ctx.restore();
+    // стіни й рухомі перешкоди
+    hl.walls.forEach(function (w) { neonRect(w[0], w[1], w[2], w[3], '#1a0b2e', C.magenta, 12); });
+    hl.movers.forEach(function (m) { var r = moverRect(m, gt); neonRect(r.x, r.y, r.w, r.h, '#06222b', C.cyan, 14); });
+  }
+  function drawHole(hl) {
+    ctx.save();
+    ctx.shadowColor = C.green; ctx.shadowBlur = 14; ctx.fillStyle = '#000'; ctx.strokeStyle = C.green; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(hl.hole[0], hl.hole[1], HOLE_R, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  function drawFlag(hl) {
+    var x = hl.hole[0], y = hl.hole[1];
+    ctx.save();
+    ctx.strokeStyle = '#e7edff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 38); ctx.stroke();
+    ctx.shadowColor = C.pink; ctx.shadowBlur = 10; ctx.fillStyle = C.pink;
+    ctx.beginPath(); ctx.moveTo(x, y - 38); ctx.lineTo(x + 22, y - 30); ctx.lineTo(x, y - 22); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  function drawBall() {
+    if (state === 'sunk') return;
+    ctx.save();
+    ctx.shadowColor = C.cyan; ctx.shadowBlur = 14; ctx.fillStyle = '#f2fbff';
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function drawAim() {
+    if (!canAim()) return;
+    var a = dragging ? dragAim : aim, pw = dragging ? dragPower : power;
+    var len = 26 + pw * 150, col = mix(C.green, C.red, pw);
+    var x2 = ball.x + Math.cos(a) * len, y2 = ball.y + Math.sin(a) * len;
+    ctx.save();
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
+    ctx.shadowColor = col; ctx.shadowBlur = 10;
+    ctx.setLineDash([7, 7]);
+    ctx.beginPath(); ctx.moveTo(ball.x + Math.cos(a) * 12, ball.y + Math.sin(a) * 12); ctx.lineTo(x2, y2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(x2 + Math.cos(a) * 9, y2 + Math.sin(a) * 9);
+    ctx.lineTo(x2 + Math.cos(a + 2.5) * 9, y2 + Math.sin(a + 2.5) * 9);
+    ctx.lineTo(x2 + Math.cos(a - 2.5) * 9, y2 + Math.sin(a - 2.5) * 9);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  function drawFlash() {
+    if (!flash) return;
+    var age = t - flash.t0;
+    if (age > 1500) { flash = null; return; }
+    ctx.save();
+    ctx.globalAlpha = 1 - age / 1500;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    glowText(flash.text, W / 2, 70 - age / 40, '800 46px ' + DISPLAY, flash.color, 18);
+    ctx.restore();
+  }
+  function drawOverlay() {
+    if (state !== 'idle' && state !== 'done') return;
+    ctx.fillStyle = 'rgba(4,4,12,0.76)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var cx = W / 2, cy = H / 2;
+    if (state === 'idle') {
+      var pk = 0.5 + 0.5 * Math.sin(t / 400);
+      glowText('NEON GOLF', cx, cy - 70, '800 64px ' + DISPLAY, mix(C.green, C.cyan, pk), 22);
+      glowText('Enter або клік: старт', cx, cy + 10, '28px ' + MONO, C.green, 12);
+      if (best) glowText('Рекорд: ' + best + ' ударів', cx, cy + 58, '22px ' + MONO, C.gold, 10);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '16px ' + MONO;
+      ctx.fillText('Тягніть від м’яча і відпустіть', cx, cy + 110);
+    } else {
+      var par = HOLES.reduce(function (a, h) { return a + h.par; }, 0), total = sumScores();
+      glowText('КУРС ПРОЙДЕНО', cx, cy - 90, '800 54px ' + DISPLAY, C.green, 22);
+      glowText('Удари: ' + total + ' (пар ' + par + ')', cx, cy - 20, '28px ' + MONO, C.cyan, 10);
+      glowText('Рекорд: ' + best, cx, cy + 20, '28px ' + MONO, C.magenta, 10);
+      if (newBest && Math.floor(t / 350) % 2 === 0) glowText('★ НОВИЙ РЕКОРД! ★', cx, cy + 62, '22px ' + MONO, C.gold, 12);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '20px ' + MONO;
+      ctx.fillText('Enter: грати знову · Esc: меню', cx, cy + 110);
+    }
+  }
+  function draw() {
+    var hl = HOLES[hi];
+    drawCourse(hl);
+    drawHole(hl);
+    drawBall();
+    drawFlag(hl);
+    drawAim();
+    drawFlash();
+    drawOverlay();
+    var pw = dragging ? dragPower : power;
+    elPower.style.width = Math.round(pw * 100) + '%';
+    elPower.style.background = mix(C.green, C.red, pw);
+  }
+
+  function frame(ts) {
+    if (panel.hidden) { last = ts; requestAnimationFrame(frame); return; }
+    var dt = Math.min(ts - (last || ts), 100);
+    last = ts; t += dt;
+    update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- Керування ----------
+  var AIMKEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyD', 'KeyW', 'KeyS'];
+  document.addEventListener('keydown', function (e) {
+    if (panel.hidden) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (AIMKEYS.indexOf(e.code) >= 0) {
+      keys[e.code] = true;
+      if (state === 'play') e.preventDefault();
+      return;
+    }
+    var onControl = e.target && e.target.closest && e.target.closest('a,button');
+    if (e.code === 'Space') {
+      if (onControl) return;
+      if (state === 'play') { e.preventDefault(); shoot(); }
+      return;
+    }
+    if (e.code === 'Escape') { if (state !== 'idle') toMenu(); return; }
+    if (e.code === 'Enter' || e.code === 'NumpadEnter') {
+      if (onControl) return;
+      if (state === 'idle' || state === 'done') { e.preventDefault(); start(); }
+      else if (state === 'play') { e.preventDefault(); shoot(); }
+    }
+  });
+  document.addEventListener('keyup', function (e) { delete keys[e.code]; });
+  window.addEventListener('blur', function () { keys = {}; dragging = false; });
+  window.addEventListener('arcade-tab', function () { keys = {}; dragging = false; });
+
+  function toCanvas(e) {
+    var r = canvas.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height };
+  }
+  function updateDrag(e) {
+    var p = toCanvas(e), dx = ball.x - p.x, dy = ball.y - p.y, d = Math.hypot(dx, dy);
+    dragPower = clamp(d / 160, 0, 1);
+    if (d > 4) dragAim = Math.atan2(dy, dx);
+  }
+  canvas.addEventListener('pointerdown', function (e) {
+    if (state === 'idle' || state === 'done') { start(); return; }
+    if (canAim()) {
+      dragging = true;
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+      dragAim = aim; dragPower = 0;
+      updateDrag(e);
+    }
+  });
+  canvas.addEventListener('pointermove', function (e) { if (dragging) updateDrag(e); });
+  canvas.addEventListener('pointerup', function () {
+    if (!dragging) return;
+    dragging = false;
+    if (dragPower > 0.08) { aim = dragAim; power = dragPower; shoot(); }
+  });
+  canvas.addEventListener('pointercancel', function () { dragging = false; });
+
+  btnStart.addEventListener('click', function () { start(); btnStart.blur(); });
+  btnSound.addEventListener('click', function () {
+    muted = !muted;
+    btnSound.textContent = muted ? 'Звук: ні' : 'Звук: так';
+    btnSound.setAttribute('aria-pressed', muted ? 'false' : 'true');
+    if (!muted) ensureAudio();
+    btnSound.blur();
+  });
+
+  loadHole(0);
+  setState('idle');
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
