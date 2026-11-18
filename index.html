@@ -1,4 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Neon Arcade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -271,6 +275,8 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
   .hud div { padding: 6px 8px; }
 }
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header class="top">
@@ -2256,13 +2262,16 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var ac = null, master = null, rv = null, dlIn = null, bus = null, noiseBuf = null;
   var nextT = 0, bar = 0, timer = null, failed = false;
   function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
-  function level() { return on ? volume * 0.5 : 0; }
+  function level() { return on ? volume * 1.6 : 0; }
 
   function build() {
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) { failed = true; return; }
     ac = new AC();
-    master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+    master = ac.createGain(); master.gain.value = 0;
+    var comp = ac.createDynamicsCompressor();                      // вирівнює гучність, щоб на динаміках не хрипіло
+    comp.threshold.value = -18; comp.knee.value = 20; comp.ratio.value = 6; comp.attack.value = 0.01; comp.release.value = 0.25;
+    master.connect(comp); comp.connect(ac.destination);
     var len = Math.floor(ac.sampleRate * 3), buf = ac.createBuffer(2, len, ac.sampleRate);
     for (var c = 0; c < 2; c++) {
       var d = buf.getChannelData(c);
@@ -2392,18 +2401,41 @@ window.fitCanvas = function (canvas, ctx, W, H) {
       bus = newBus(); nextT = now + 0.2; bar = 0; schedule();
     }
   }
+  // iPhone: без цього звук сторінки глушить перемикач беззвучного режиму. Тиха доріжка переводить аудіо в режим відтворення
+  var silent = null;
+  function silentWav() {
+    var n = 800, b = new Uint8Array(44 + n), i;
+    function str(o, t) { for (var k = 0; k < t.length; k++) b[o + k] = t.charCodeAt(k); }
+    function w32(o, v) { b[o] = v & 255; b[o + 1] = (v >> 8) & 255; b[o + 2] = (v >> 16) & 255; b[o + 3] = (v >> 24) & 255; }
+    function w16(o, v) { b[o] = v & 255; b[o + 1] = (v >> 8) & 255; }
+    str(0, 'RIFF'); w32(4, 36 + n); str(8, 'WAVE'); str(12, 'fmt '); w32(16, 16); w16(20, 1); w16(22, 1);
+    w32(24, 8000); w32(28, 8000); w16(32, 1); w16(34, 8); str(36, 'data'); w32(40, n);
+    for (i = 44; i < 44 + n; i++) b[i] = 128;
+    var bin = ''; for (i = 0; i < b.length; i++) bin += String.fromCharCode(b[i]);
+    return 'data:audio/wav;base64,' + btoa(bin);
+  }
+  function unlockIOS() {
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    try {
+      if (!silent) { silent = new Audio(silentWav()); silent.loop = true; silent.setAttribute('playsinline', ''); }
+      var pr = silent.play(); if (pr && pr.catch) pr.catch(function () {});
+    } catch (e) {}
+  }
+  function onRunning() { schedule(); applyLevel(); detach(); }
   function start() {
     if (failed || !on) return;
+    unlockIOS();
     try {
       if (!ac) { build(); if (ac) bus = newBus(); }
       if (!ac) return;
-      if (ac.state === 'suspended') ac.resume().catch(function () {});
+      if (ac.state !== 'running') ac.resume().then(onRunning, function () {});   // на телефоні стан може бути «interrupted», не лише «suspended»
       if (!timer) timer = setInterval(schedule, 400);
       schedule(); applyLevel();
     } catch (e) { failed = true; btn.disabled = true; vol.disabled = true; }
   }
   function stop() {
     applyLevel();
+    try { if (silent) silent.pause(); } catch (e) {}
     if (ac) setTimeout(function () { if (!on && ac && ac.state === 'running') ac.suspend().catch(function () {}); }, 800);
   }
   function paint() {
@@ -2431,13 +2463,10 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     applyLevel();
   });
   // Браузер дозволяє звук лише після дії користувача: музика стартує з першого кліку чи натискання клавіші
-  function firstGesture() {
-    document.removeEventListener('pointerdown', firstGesture, true);
-    document.removeEventListener('keydown', firstGesture, true);
-    start();
-  }
-  document.addEventListener('pointerdown', firstGesture, true);
-  document.addEventListener('keydown', firstGesture, true);
+  var EVTS = ['pointerup', 'touchend', 'click', 'keydown'];     // pointerdown на телефоні звук не розблоковує
+  function gesture() { start(); }
+  function detach() { if (ac && ac.state === 'running') EVTS.forEach(function (n) { document.removeEventListener(n, gesture, true); }); }
+  EVTS.forEach(function (n) { document.addEventListener(n, gesture, true); });
   document.addEventListener('visibilitychange', function () {
     if (!ac) return;
     if (document.hidden) { try { ac.suspend(); } catch (e) {} }
@@ -2447,5 +2476,5 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   paint();
 })();
 </script>
-
-</body></html>
+</body>
+</html>
