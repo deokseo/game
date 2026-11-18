@@ -215,6 +215,48 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
   .dpad { margin-top: 10px; }
 }
 
+/* Складність, скіни, згортання розділів */
+.opts { display: flex; gap: 10px 22px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.optgroup { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.optgroup .k { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-right: 4px; }
+.chip { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); background: transparent; border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; line-height: 1.2; }
+.chip:hover { color: var(--fg); border-color: var(--dim); }
+.chip[aria-checked="true"] { color: var(--cyan); border-color: var(--cyan); background: rgba(0,235,255,.1); }
+.chip[data-diff="easy"][aria-checked="true"] { color: var(--green); border-color: var(--green); background: rgba(57,255,120,.1); }
+.chip[data-diff="hard"][aria-checked="true"] { color: var(--red); border-color: var(--red); background: rgba(255,70,88,.1); }
+.chip i { width: 18px; height: 10px; border-radius: 5px; display: inline-block; background: var(--dim); }
+@media (hover: none), (pointer: coarse) { .chip { min-height: 40px; } }
+
+.accbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 56px; }
+.accbar .k { font-family: var(--mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.acc { padding-top: 14px; }
+.acc > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+.acc > summary::-webkit-details-marker { display: none; }
+.acc > summary:hover { border-color: var(--dim); }
+.acc > summary h2 { font-size: clamp(1.15rem, 2.4vw, 1.45rem); font-weight: 800; flex: none; }
+.acc > summary .sum { flex: 1; min-width: 0; color: var(--dim); font-size: .93rem; }
+.acc > summary .chev { flex: none; width: 11px; height: 11px; margin: 0 4px 3px auto; border-right: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); transform: rotate(45deg); transition: transform .2s; }
+.acc[open] > summary { border-color: var(--cyan); box-shadow: 0 0 18px rgba(0,235,255,.15); }
+.acc[open] > summary .chev { transform: rotate(-135deg); margin-bottom: 0; margin-top: 5px; }
+.accbody { padding-top: 20px; }
+.accbody .intro { color: #c5cbea; max-width: 62ch; }
+@media (max-width: 640px) { .acc > summary .sum { display: none; } }
+@media (prefers-reduced-motion: reduce) { .acc > summary .chev { transition: none; } }
+
+/* Музика */
+.music { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.music + .fsbtn { margin-left: 0; }
+#musicVol { width: 96px; accent-color: var(--cyan); cursor: pointer; }
+#musicVol:disabled { opacity: .35; cursor: default; }
+
+/* Тетріс і музичний рядок */
+#tetrisBoard { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; border-radius: 6px; background: var(--bg); touch-action: none; cursor: pointer; }
+.tpad { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 380px; margin: 14px auto 0; }
+.tpad button { height: 52px; font-size: 22px; padding: 0; text-transform: none; }
+@media (hover: none), (pointer: coarse) { .tpad { display: grid; } }
+.musicbar { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.arcade.fs .musicbar { width: 100%; max-width: 1100px; }
+
 .foot { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 13px; color: var(--dim); letter-spacing: .04em; }
 
 @media (max-width: 920px) {
@@ -244,6 +286,7 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
       <a href="#play">Гра</a>
       <a href="#rules">Правила</a>
       <a href="#golf">Міні-гольф</a>
+      <a href="#tetris">Тетріс</a>
       <a href="#levels">Швидкість</a>
       <a href="#run">Запуск на ПК</a>
       <a href="#ideas">Ідеї</a>
@@ -255,12 +298,12 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
       <div>
         <p class="eyebrow">Python · Pygame · Canvas</p>
         <h1>Неонові ігри, які <span class="glow-c">світяться</span></h1>
-        <p class="lead">Змійка з версії для ПК і новий міні-гольф. Перемикайте ігри вкладками й грайте прямо в браузері, а змійку можна запустити і на комп'ютері.</p>
+        <p class="lead">Змійка з версії для ПК, міні-гольф і тетріс. Перемикайте ігри вкладками й грайте прямо в браузері, а змійку можна запустити і на комп'ютері.</p>
         <dl class="facts">
-          <div><dt>2 гри</dt><dd>змійка і міні-гольф у вкладках</dd></div>
+          <div><dt>3 гри</dt><dd>змійка, гольф і тетріс у вкладках</dd></div>
           <div><dt>6 лунок</dt><dd>з піском, водою і рухомими стінами</dd></div>
-          <div><dt>5 с</dt><dd>живе бонус у змійці</dd></div>
-          <div><dt>55 мс</dt><dd>найшвидший крок змійки</dd></div>
+          <div><dt id="factBonus">5 с</dt><dd>живе бонус у змійці</dd></div>
+          <div><dt id="factMin">55 мс</dt><dd>найшвидший крок змійки</dd></div>
         </dl>
         <div class="cta">
           <a class="btn primary" href="#run">Змійка на ПК</a>
@@ -272,7 +315,17 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
         <div class="tabs" role="tablist" aria-label="Ігри">
           <button class="tab" role="tab" id="tabSnake" data-tab="snake" aria-selected="true" aria-controls="panel-snake" type="button">Змійка</button>
           <button class="tab" role="tab" id="tabGolf" data-tab="golf" aria-selected="false" aria-controls="panel-golf" type="button">Міні-гольф</button>
+          <button class="tab" role="tab" id="tabTetris" data-tab="tetris" aria-selected="false" aria-controls="panel-tetris" type="button">Тетріс</button>
           <button class="tab fsbtn" id="btnFs" type="button" aria-pressed="false">На весь екран</button>
+        </div>
+        <div class="musicbar">
+          <button class="tab" id="btnMusic" type="button" aria-pressed="true">♪ Музика: так</button>
+          <div class="optgroup" role="radiogroup" aria-label="Стиль музики">
+            <button class="chip" type="button" role="radio" aria-checked="false" data-music="calm">Спокійна</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-music="drive">Драйв</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-music="arcade">Аркада</button>
+          </div>
+          <input type="range" id="musicVol" min="0" max="100" value="50" aria-label="Гучність музики">
         </div>
         <div id="panel-snake" role="tabpanel" aria-labelledby="tabSnake">
       <div class="game">
@@ -281,6 +334,21 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           <div><span class="k">Рекорд</span><span class="v pink" id="hudBest">0000</span></div>
           <div><span class="k">Рівень</span><span class="v green" id="hudLevel">1</span></div>
           <div><span class="k">Крок</span><span class="v" id="hudSpeed">150 мс</span></div>
+        </div>
+        <div class="opts">
+          <div class="optgroup" id="diff-snake" role="radiogroup" aria-label="Складність змійки">
+            <span class="k">Складність</span>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-diff="easy">Легко</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-diff="normal">Нормально</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-diff="hard">Складно</button>
+          </div>
+          <div class="optgroup" role="radiogroup" aria-label="Скін">
+            <span class="k">Скін</span>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="neon"><i></i>Неон</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="synth"><i></i>Синтвейв</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="lava"><i></i>Лава</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="matrix"><i></i>Матриця</button>
+          </div>
         </div>
         <canvas id="board" width="750" height="500" role="img" aria-label="Ігрове поле Neon Snake"></canvas>
         <div class="controls">
@@ -306,7 +374,22 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
               <div><span class="k">Загалом</span><span class="v" id="golfTotal">0</span></div>
               <div><span class="k">Рекорд</span><span class="v pink" id="golfBest">—</span></div>
             </div>
-            <canvas id="golfBoard" width="750" height="500" role="img" aria-label="Поле міні-гольфу"></canvas>
+            <div class="opts">
+          <div class="optgroup" id="diff-golf" role="radiogroup" aria-label="Складність гольфу">
+            <span class="k">Складність</span>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-diff="easy">Легко</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-diff="normal">Нормально</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-diff="hard">Складно</button>
+          </div>
+          <div class="optgroup" role="radiogroup" aria-label="Скін">
+            <span class="k">Скін</span>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="neon"><i></i>Неон</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="synth"><i></i>Синтвейв</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="lava"><i></i>Лава</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-skin="matrix"><i></i>Матриця</button>
+          </div>
+        </div>
+        <canvas id="golfBoard" width="750" height="500" role="img" aria-label="Поле міні-гольфу"></canvas>
             <div class="power"><span class="k">Сила</span><div class="ptrack"><div class="pbar" id="golfPower"></div></div></div>
             <div class="controls">
               <button class="btn primary" id="golfStart" type="button">Старт</button>
@@ -315,12 +398,54 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
             <p class="hint"><span class="kb">Тягніть від м'яча в протилежний бік і відпустіть. Або ←/→ чи A/D: приціл, ↑/↓ чи W/S: сила, Пробіл: удар, Esc: меню.</span><span class="touch">Покладіть палець на поле, відтягніть від м'яча в протилежний бік і відпустіть. Довша відтяжка означає сильніший удар.</span></p>
           </div>
         </div>
+        <div id="panel-tetris" role="tabpanel" aria-labelledby="tabTetris" hidden>
+          <div class="game">
+            <div class="hud">
+              <div><span class="k">Рахунок</span><span class="v" id="tScore">0000</span></div>
+              <div><span class="k">Рекорд</span><span class="v pink" id="tBest">0000</span></div>
+              <div><span class="k">Рівень</span><span class="v green" id="tLevel">1</span></div>
+              <div><span class="k">Лінії</span><span class="v" id="tLines">0</span></div>
+            </div>
+            <div class="opts">
+              <div class="optgroup" id="diff-tetris" role="radiogroup" aria-label="Складність тетрісу">
+                <span class="k">Складність</span>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-diff="easy">Легко</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-diff="normal">Нормально</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-diff="hard">Складно</button>
+              </div>
+              <div class="optgroup" role="radiogroup" aria-label="Скін">
+                <span class="k">Скін</span>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-skin="neon"><i></i>Неон</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-skin="synth"><i></i>Синтвейв</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-skin="lava"><i></i>Лава</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-skin="matrix"><i></i>Матриця</button>
+              </div>
+            </div>
+            <canvas id="tetrisBoard" width="750" height="500" role="img" aria-label="Поле тетрісу"></canvas>
+            <div class="controls">
+              <button class="btn primary" id="tStart" type="button">Старт</button>
+              <button class="btn" id="tPause" type="button" disabled>Пауза</button>
+              <button class="btn" id="tSound" type="button" aria-pressed="true">Звук: так</button>
+            </div>
+            <div class="tpad" id="tpad" aria-label="Кнопки керування">
+              <button class="btn" type="button" data-act="left" aria-label="Вліво">←</button>
+              <button class="btn" type="button" data-act="rot" aria-label="Повернути">↻</button>
+              <button class="btn" type="button" data-act="right" aria-label="Вправо">→</button>
+              <button class="btn" type="button" data-act="soft" aria-label="Прискорити">↓</button>
+              <button class="btn" type="button" data-act="drop" aria-label="Скинути вниз">⤓</button>
+              <button class="btn" type="button" data-act="hold" aria-label="Запас">⇄</button>
+            </div>
+            <p class="hint"><span class="kb">←/→ або A/D: рух · ↑/W/X: поворот · Z: проти годинникової · ↓/S: прискорити · Пробіл: скинути · C/Shift: запас · P: пауза · Esc: меню</span><span class="touch">Проведіть пальцем по полю, щоб рухати фігуру, торкніться, щоб повернути, швидко проведіть вниз, щоб скинути. Або користуйтеся кнопками.</span></p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="rules">
-      <h2>Правила змійки</h2>
-      <p class="intro">Кольори тут ті самі, що на полі: за ними легко впізнати, що є що.</p>
+    <div class="accbar"><span class="k">Правила, таблиці й ідеї</span><button class="btn" id="accAll" type="button">Розгорнути все</button></div>
+    <details class="section acc" id="rules">
+      <summary><h2>Правила змійки</h2><span class="sum">Керування, їжа, бонус, швидкість, програш</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody">
+      <p class="intro">Кольори тут ті самі, що на полі: за ними легко впізнати, що є що. Числа вказані для складності «Нормально».</p>
       <div class="rules">
         <article class="rule">
           <h3><span class="sw keys"></span>Керування</h3>
@@ -342,6 +467,10 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           <p>Гра закінчується, коли голова торкається стіни або власного тіла. Клітинка, з якої хвіст саме відійшов, безпечна.</p>
         </article>
         <article class="rule">
+          <h3><span class="sw wall"></span>Бар'єри</h3>
+          <p>На «Нормально» і «Складно» на полі стоять блоки, а нові з'являються з кожними кількома яблуками. Новий блок спершу блимає червоним пунктиром і лише через 1,2 секунди стає твердим. Зіткнення з ним програш. На «Легко» бар'єрів немає.</p>
+        </article>
+        <article class="rule">
           <h3><span class="sw speed"></span>Швидкість</h3>
           <p>Кожні 5 з'їдених яблук крок стає коротшим на 10 мс, до межі 55 мс. Бонус на швидкість не впливає.</p>
         </article>
@@ -349,12 +478,13 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           <h3><span class="sw best"></span>Рекорд</h3>
           <p>У браузері рекорд лишається в цьому браузері. У версії для ПК він зберігається у файлі highscore.txt поруч зі скриптом.</p>
         </article>
-      </div>
-    </section>
+      </div></div>
+    </details>
 
-    <section class="section" id="golf">
-      <h2>Міні-гольф</h2>
-      <p class="intro">Заженіть м'яч у лунку за якомога менше ударів. Шість лунок, на кожній свій пар. Підсумок порівнюється з сумою парів, а найкращий результат зберігається в цьому браузері.</p>
+    <details class="section acc" id="golf">
+      <summary><h2>Міні-гольф</h2><span class="sum">Шість лунок: пісок, вода, рухомі стіни</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody">
+      <p class="intro">Заженіть м'яч у лунку за якомога менше ударів. Шість лунок, на кожній свій пар. Підсумок порівнюється з сумою парів, а найкращий результат зберігається в цьому браузері. Складність змінює розмір лунки, швидкість рухомих стін, гальмування в піску і кількість перешкод. На «Нормально» додаються пісок і вода, а на «Складно» ще стіни й рухомі перешкоди.</p>
       <div class="rules">
         <article class="rule">
           <h3><span class="sw keys"></span>Удар</h3>
@@ -388,12 +518,47 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           </thead>
           <tbody id="holeRows"></tbody>
         </table>
-      </div>
-    </section>
+      </div></div>
+    </details>
 
-    <section class="section" id="levels">
-      <h2>Швидкість у змійці</h2>
-      <p class="intro">Рівень залежить від кількості з'їдених яблук. Рядок підсвічується за вашим поточним рівнем у грі вище.</p>
+    <details class="section acc" id="tetris">
+      <summary><h2>Тетріс</h2><span class="sum">Керування, очки, запас і складність</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody"><p class="intro">Складайте фігури в суцільні лінії, щоб вони зникали. Гра закінчується, коли нова фігура не вміщується на полі.</p>
+      <div class="rules">
+        <article class="rule">
+          <h3><span class="sw keys"></span>Керування</h3>
+          <p>Фігуру можна рухати, повертати в обидва боки, прискорювати й скидати одразу вниз. Лише одна фігура за хід може піти в запас.</p>
+          <div class="keys-row" aria-label="Клавіші">
+            <kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>Z</kbd><kbd>C</kbd><kbd>Пробіл</kbd>
+          </div>
+        </article>
+        <article class="rule">
+          <h3><span class="sw food"></span>Очки</h3>
+          <p>Одна лінія дає 100, дві 300, три 500, чотири одразу 800, і все множиться на рівень. Ще +1 за кожну клітинку прискореного падіння і +2 за скидання.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw speed"></span>Рівні</h3>
+          <p>Кожні 10 ліній рівень зростає, фігури падають швидше. Стартовий рівень залежить від складності.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw hole"></span>Тінь і запас</h3>
+          <p>Контур унизу показує, де фігура приземлиться. Запас відкладає поточну фігуру, а повертає ту, що лежала там раніше.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw wall"></span>Складність</h3>
+          <p>Легко: повільніше падіння, три наступні фігури, є тінь. Нормально: стандартний темп. Складно: старт із 5 рівня, без тіні, і кожні 12 фігур знизу піднімається рядок сміття з однією дірою.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw best"></span>Рекорд</h3>
+          <p>Рекорд зберігається окремо для кожної складності, у цьому браузері.</p>
+        </article>
+      </div></div>
+    </details>
+
+    <details class="section acc" id="levels">
+      <summary><h2>Швидкість у змійці</h2><span class="sum">Як змінюється крок змійки за рівнями</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody">
+      <p class="intro">Рівень залежить від кількості з'їдених яблук. Рядок підсвічується за вашим поточним рівнем у грі вище. Значення змінюються разом зі складністю.</p>
       <div class="tablebox">
         <table>
           <thead>
@@ -401,11 +566,12 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           </thead>
           <tbody id="speedRows"></tbody>
         </table>
-      </div>
-    </section>
+      </div></div>
+    </details>
 
-    <section class="section" id="run">
-      <h2>Змійка на ПК</h2>
+    <details class="section acc" id="run">
+      <summary><h2>Змійка на ПК</h2><span class="sum">Python 3, Pygame і дві команди</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody">
       <p class="intro">Потрібні Python 3 і бібліотека Pygame. Уся графіка малюється кодом, зовнішніх файлів немає, звуки генеруються програмно.</p>
       <div class="run">
         <ol class="steps">
@@ -423,28 +589,56 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           <li>Вікно 750×500 плюс панель із рахунком зверху, 60 кадрів за секунду. Рух змійки йде за таймером, а не за кадрами.</li>
           <li>Якщо звук запустити не вдалося, гра працює без нього.</li>
         </ul>
-      </div>
-    </section>
+      </div></div>
+    </details>
 
-    <section class="section" id="ideas">
-      <h2>Куди розвивати гру</h2>
+    <details class="section acc" id="ideas">
+      <summary><h2>Куди розвивати гру</h2><span class="sum">Сім ідей для розширення</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody">
       <p class="intro">Ідеї, з яких можна почати. Праворуч приблизний обсяг роботи.</p>
       <ul class="ideas">
-        <li><h3>Скіни і теми</h3><p>Вибір кольору змійки та палітри: синтвейв, кіберпанк, «матриця». Вибір зберігається у файлі.</p><span class="effort">Невеликий</span></li>
+        <li><h3>Більше скінів</h3><p>Нові палітри (кіберпанк, лід, захід сонця), які фарбують не лише змійку, а й усю сторінку.</p><span class="effort">Невеликий</span></li>
         <li><h3>Бонуси з ефектами</h3><p>Сповільнення, подвійні очки, тимчасова невразливість, проходження крізь стіни.</p><span class="effort">Середній</span></li>
         <li><h3>Рівні та перешкоди</h3><p>Карти зі стінами, лазерами або порталами, які відкриваються після певного рахунку.</p><span class="effort">Середній</span></li>
         <li><h3>Таблиця рекордів</h3><p>Топ-10 з іменами та режим без стін, де змійка виходить з протилежного краю поля.</p><span class="effort">Середній</span></li>
         <li><h3>Гольф на Pygame</h3><p>Перенести міні-гольф у версію для ПК: фізика м'яча й лунки переносяться майже без змін.</p><span class="effort">Середній</span></li>
         <li><h3>Ще аркади</h3><p>Більярд, керлінг, пінбол: той самий принцип «прицілься і вдар» з іншими полями.</p><span class="effort">Середній</span></li>
         <li><h3>Два гравці</h3><p>Друга змійка на WASD проти першої на стрілках: змагання за рахунок або за виживання.</p><span class="effort">Великий</span></li>
-      </ul>
-    </section>
+      </ul></div>
+    </details>
   </main>
 
   <footer class="foot">Neon Snake · Python + Pygame на ПК · Canvas у браузері</footer>
 </div>
 
 <script>
+// Скіни: палітра змійки й м'яча, спільна для обох ігор
+(function () {
+  var SKINS = {
+    neon:   { id: 'neon', a: '#39ff78', b: '#00aaff', fa: '#0f5a2d', fb: '#004a73', head: '#baffe1', hf: '#5c8f7f', ball: '#00ebff' },
+    synth:  { id: 'synth', a: '#ff2aa1', b: '#7a5cff', fa: '#5a0f3a', fb: '#2a1f73', head: '#ffd0ec', hf: '#8f5c7a', ball: '#ff2aa1' },
+    lava:   { id: 'lava', a: '#ffd728', b: '#ff4658', fa: '#6b5a0a', fb: '#6b1420', head: '#fff2b0', hf: '#8f845c', ball: '#ffd728' },
+    matrix: { id: 'matrix', a: '#b6ffb0', b: '#0a8f3a', fa: '#2a5a28', fb: '#053f1a', head: '#eaffe8', hf: '#6f8f6c', ball: '#39ff78' }
+  };
+  var KEY = 'neon-arcade-skin';
+  var btns = document.querySelectorAll('[data-skin]');
+  window.arcadeSkin = SKINS.neon;
+  function set(name, save) {
+    if (!SKINS[name]) name = 'neon';
+    window.arcadeSkin = SKINS[name];
+    Array.prototype.forEach.call(btns, function (b) { b.setAttribute('aria-checked', b.getAttribute('data-skin') === name ? 'true' : 'false'); });
+    if (save) { try { localStorage.setItem(KEY, name); } catch (e) {} }
+  }
+  Array.prototype.forEach.call(btns, function (b) {
+    var sk = SKINS[b.getAttribute('data-skin')], dot = b.querySelector('i');
+    if (dot && sk) dot.style.background = 'linear-gradient(90deg,' + sk.a + ',' + sk.b + ')';
+    b.addEventListener('click', function () { set(b.getAttribute('data-skin'), true); b.blur(); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  set(saved, false);
+})();
+
 // Підганяє роздільність canvas під його реальний розмір на екрані (чітко на великих і щільних екранах)
 window.fitCanvas = function (canvas, ctx, W, H) {
   function fit() {
@@ -465,7 +659,8 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   // Налаштування такі самі, як у версії для ПК
   var COLS = 30, ROWS = 20, CELL = 25, W = COLS * CELL, H = ROWS * CELL;
   var START = 150, STEP = 10, MIN = 55, PER_LEVEL = 5;
-  var BONUS_EVERY = 4, BONUS_MS = 5000, P_FOOD = 10, P_BONUS = 50;
+  var BONUS_EVERY = 4, BONUS_MS = 5000, P_FOOD = 10, P_BONUS = 50;   // значення «Нормально», далі їх підміняє applyDiff
+  var OBST_START = 0, OBST_EVERY = 0, OBST_MAX = 0;   // бар'єри: скільки на старті, раз на скільки яблук новий, найбільше
   var KEY = 'neon-snake-best';
 
   var C = { bg: '#07070f', grid: '#10122a', cyan: '#00ebff', magenta: '#ff2aa1', pink: '#ff3c82',
@@ -487,10 +682,10 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var btnSound = document.getElementById('btnSound');
 
   var best = 0;
-  try { best = parseInt(localStorage.getItem(KEY) || '0', 10) || 0; } catch (e) {}
+  /* рекорд завантажує applyDiff */
 
   var state = 'idle';            // idle | play | pause | over
-  var snake, dir, queue, grow, food, bonus, score, apples, acc, newRecord, particles;
+  var snake, dir, queue, grow, food, bonus, score, apples, acc, newRecord, particles, obstacles = [], tg = 0;
   var t = 0, last = 0;
 
   // ---------- Допоміжне ----------
@@ -540,9 +735,28 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     snake.forEach(function (s) { taken[s.x + ',' + s.y] = 1; });
     if (food) taken[food.x + ',' + food.y] = 1;
     if (bonus) taken[bonus.x + ',' + bonus.y] = 1;
+    obstacles.forEach(function (o) { taken[o.x + ',' + o.y] = 1; });
     var free = [];
     for (var x = 0; x < COLS; x++) for (var y = 0; y < ROWS; y++) if (!taken[x + ',' + y]) free.push({ x: x, y: y });
     return free.length ? free[Math.floor(Math.random() * free.length)] : null;
+  }
+  // Бар'єри: новий блок спершу блимає 1,2 с, і лише потім стає твердим
+  function solid(o) { return tg - o.born >= 1200; }
+  function addObstacle(instant) {
+    var taken = {};
+    snake.forEach(function (s) { taken[s.x + ',' + s.y] = 1; });
+    if (food) taken[food.x + ',' + food.y] = 1;
+    if (bonus) taken[bonus.x + ',' + bonus.y] = 1;
+    for (var tries = 0; tries < 120; tries++) {
+      var x = Math.floor(Math.random() * COLS), y = Math.floor(Math.random() * ROWS);
+      if (taken[x + ',' + y]) continue;
+      if (instant && x >= 9 && x <= 23 && y >= 8 && y <= 12) continue;                           // не перекриваємо старт
+      if (!instant && Math.abs(x - snake[0].x) + Math.abs(y - snake[0].y) < 6) continue;          // не ставимо перед самою головою
+      if (obstacles.some(function (o) { return Math.abs(o.x - x) <= 1 && Math.abs(o.y - y) <= 1; })) continue;   // без глухих кутів
+      obstacles.push({ x: x, y: y, born: instant ? -99999 : tg });
+      return true;
+    }
+    return false;
   }
   function spawnFood() {
     var c = freeCell();
@@ -557,6 +771,8 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     snake = [{ x: 15, y: 10 }, { x: 14, y: 10 }, { x: 13, y: 10 }];
     dir = DIRS.right; queue = []; grow = 0; food = null; bonus = null;
     score = 0; apples = 0; acc = 0; newRecord = false; particles = [];
+    obstacles = []; tg = 0;
+    for (var q = 0; q < OBST_START; q++) addObstacle(true);
     spawnFood();
     updateHud();
   }
@@ -577,7 +793,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     sfxDead();
     if (score > best) {
       best = score; newRecord = true;
-      try { localStorage.setItem(KEY, String(best)); } catch (e) {}
+      try { localStorage.setItem(keyFor(diff), String(best)); } catch (e) {}
     }
     updateHud();
   }
@@ -602,11 +818,13 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     if (grow > 0) grow--; else snake.pop();
     var hitWall = h.x < 0 || h.x >= COLS || h.y < 0 || h.y >= ROWS;
     var hitSelf = !hitWall && snake.slice(1).some(function (s) { return s.x === h.x && s.y === h.y; });
-    if (hitWall || hitSelf) { gameOver(); return; }
+    var hitObs = !hitWall && obstacles.some(function (o) { return o.x === h.x && o.y === h.y && solid(o); });
+    if (hitWall || hitSelf || hitObs) { gameOver(); return; }
     if (h.x === food.x && h.y === food.y) {
       score += P_FOOD; apples++; grow++;
       sfxEat(); burst(food, C.pink, 14);
       spawnFood();
+      if (state === 'play' && OBST_EVERY && apples % OBST_EVERY === 0 && obstacles.length < OBST_MAX) addObstacle(false);
       if (state === 'play' && apples % BONUS_EVERY === 0 && !bonus) spawnBonus();
       updateHud();
     } else if (bonus && h.x === bonus.x && h.y === bonus.y) {
@@ -623,6 +841,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
       if (p.life <= 0) particles.splice(i, 1);
     }
     if (state !== 'play') return;
+    tg += dt;
     if (bonus) { bonus.left -= dt; if (bonus.left <= 0) bonus = null; }
     acc += dt;                       // рух за таймером, а не за кадрами
     var iv = intervalMs();
@@ -632,19 +851,20 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   // ---------- Інтерфейс ----------
   var rowsEl = document.getElementById('speedRows');
   var MAXLV = 11;
-  (function buildTable() {
+  function buildTable() {
     var html = '';
     for (var n = 1; n <= MAXLV; n++) {
       var iv = Math.max(MIN, START - (n - 1) * STEP);
       var sps = 1000 / iv;
-      var pct = Math.round(sps / (1000 / MIN) * 100);
+      var pct = Math.round(sps / (1000 / 45) * 100);
       var lv = n === MAXLV ? n + '+' : String(n);
       var ap = n === MAXLV ? ((n - 1) * PER_LEVEL) + '+' : ((n - 1) * PER_LEVEL) + '–' + (n * PER_LEVEL - 1);
       html += '<tr data-level="' + n + '"><td>' + lv + '</td><td>' + ap + '</td><td>' + iv + '</td><td>' + sps.toFixed(1) +
               '</td><td class="barcell"><div class="track"><div class="bar" style="width:' + pct + '%"></div></div></td></tr>';
     }
     rowsEl.innerHTML = html;
-  })();
+    updateHud();
+  }
   function updateHud() {
     elScore.textContent = pad(score);
     elBest.textContent = pad(best);
@@ -672,6 +892,28 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     ctx.shadowColor = C.cyan; ctx.shadowBlur = 16; ctx.strokeStyle = C.cyan; ctx.lineWidth = 2;
     ctx.strokeRect(1, 1, W - 2, H - 2);
     ctx.restore();
+  }
+  function drawObstacles() {
+    obstacles.forEach(function (o) {
+      var px = o.x * CELL, py = o.y * CELL;
+      if (solid(o)) {
+        ctx.save();
+        ctx.shadowColor = C.magenta; ctx.shadowBlur = 12;
+        ctx.fillStyle = '#1a0b2e'; ctx.fillRect(px + 2, py + 2, CELL - 4, CELL - 4);
+        ctx.strokeStyle = C.magenta; ctx.lineWidth = 2; ctx.strokeRect(px + 3, py + 3, CELL - 6, CELL - 6);
+        ctx.restore();
+        ctx.strokeStyle = 'rgba(255,42,161,0.55)'; ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(px + 8, py + 8); ctx.lineTo(px + CELL - 8, py + CELL - 8);
+        ctx.moveTo(px + CELL - 8, py + 8); ctx.lineTo(px + 8, py + CELL - 8);
+        ctx.stroke();
+      } else if (Math.floor(t / 120) % 2 === 0) {      // попередження: блимає, поки не став твердим
+        ctx.save();
+        ctx.setLineDash([4, 4]); ctx.strokeStyle = C.red; ctx.lineWidth = 2;
+        ctx.strokeRect(px + 3, py + 3, CELL - 6, CELL - 6);
+        ctx.restore();
+      }
+    });
   }
   function drawFood() {
     if (!food) return;
@@ -708,16 +950,16 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     }
   }
   function drawSnake() {
-    var n = snake.length, i, s, k, col, px, py;
+    var n = snake.length, i, s, k, col, px, py, SK = window.arcadeSkin;
     for (i = n - 1; i >= 0; i--) {
       s = snake[i];
       if (s.x < 0 || s.x >= COLS || s.y < 0 || s.y >= ROWS) continue;
       k = i / Math.max(1, n - 1);
-      col = i === 0 ? C.head : mix(C.green, C.blue, k);
+      col = i === 0 ? SK.head : mix(SK.a, SK.b, k);
       px = s.x * CELL; py = s.y * CELL;
       ctx.save();
       ctx.shadowColor = col; ctx.shadowBlur = 14;
-      ctx.fillStyle = i === 0 ? '#5c8f7f' : mix('#0f5a2d', '#004a73', k);
+      ctx.fillStyle = i === 0 ? SK.hf : mix(SK.fa, SK.fb, k);
       rr(px + 2, py + 2, CELL - 4, CELL - 4, 7); ctx.fill();
       ctx.restore();
       ctx.fillStyle = col;
@@ -774,6 +1016,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   }
   function draw() {
     drawBoard();
+    drawObstacles();
     drawFood();
     drawBonus();
     drawSnake();
@@ -857,6 +1100,35 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     });
   });
 
+  // Складність змійки: стартова швидкість, межа швидкості, частота й тривалість бонусу, очки
+  var DIFFS = {
+    easy:   { start: 190, step: 8,  min: 100, every: 3, bonusMs: 7000, pf: 10, pb: 50, os: 0, oe: 0, om: 0 },
+    normal: { start: 150, step: 10, min: 55,  every: 4, bonusMs: 5000, pf: 10, pb: 50, os: 3, oe: 5, om: 8 },
+    hard:   { start: 115, step: 12, min: 45,  every: 5, bonusMs: 4000, pf: 15, pb: 75, os: 6, oe: 3, om: 18 }
+  };
+  var diff = 'normal';
+  try { var savedDiff = localStorage.getItem('neon-snake-diff'); if (DIFFS[savedDiff]) diff = savedDiff; } catch (e) {}
+  function keyFor(d) { return d === 'normal' ? KEY : KEY + '-' + d; }
+  function applyDiff(name, fromUser) {
+    var d = DIFFS[name]; diff = name;
+    START = d.start; STEP = d.step; MIN = d.min; BONUS_EVERY = d.every; BONUS_MS = d.bonusMs; P_FOOD = d.pf; P_BONUS = d.pb;
+    OBST_START = d.os; OBST_EVERY = d.oe; OBST_MAX = d.om;
+    try { best = parseInt(localStorage.getItem(keyFor(name)) || '0', 10) || 0; } catch (e) { best = 0; }
+    Array.prototype.forEach.call(document.querySelectorAll('#diff-snake [data-diff]'), function (b) {
+      b.setAttribute('aria-checked', b.getAttribute('data-diff') === name ? 'true' : 'false');
+    });
+    var fm = document.getElementById('factMin'); if (fm) fm.textContent = MIN + ' мс';
+    var fb = document.getElementById('factBonus'); if (fb) fb.textContent = (BONUS_MS / 1000) + ' с';
+    if (fromUser) {
+      try { localStorage.setItem('neon-snake-diff', name); } catch (e) {}
+      reset(); setState('idle');      // нова складність діє з наступної партії
+    }
+    buildTable();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#diff-snake [data-diff]'), function (b) {
+    b.addEventListener('click', function () { applyDiff(b.getAttribute('data-diff'), true); b.blur(); });
+  });
+  applyDiff(diff, false);
   reset();
   setState('idle');
   requestAnimationFrame(frame);
@@ -866,7 +1138,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
 (function () {
   'use strict';
   var tabs = document.querySelectorAll('[data-tab]');
-  var panels = { snake: document.getElementById('panel-snake'), golf: document.getElementById('panel-golf') };
+  var panels = { snake: document.getElementById('panel-snake'), golf: document.getElementById('panel-golf'), tetris: document.getElementById('panel-tetris') };
   function select(name) {
     Array.prototype.forEach.call(tabs, function (b) {
       b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false');
@@ -904,6 +1176,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var W = 750, H = 500, BM = 12, BALL_R = 7, HOLE_R = 11;
   var DEC = 400, SAND_DEC = 1500, STOP = 14, MINV = 70, MAXV = 780, SINK_V = 340, REST = 0.82;
   var KEY = 'neon-golf-best';
+  var PULL = 500, MOVK = 1;      // притягування до лунки і швидкість рухомих стін
   var C = { bg: '#07070f', grid: '#10122a', cyan: '#00ebff', magenta: '#ff2aa1', pink: '#ff3c82',
             green: '#39ff78', gold: '#ffd728', red: '#ff4658', blue: '#2a7bff' };
   var DISPLAY = '"Exo 2", system-ui, sans-serif';
@@ -940,7 +1213,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var rowsEl = document.getElementById('holeRows');
 
   var best = 0;
-  try { best = parseInt(localStorage.getItem(KEY) || '0', 10) || 0; } catch (e) {}
+  /* рекорд завантажує applyDiff */
 
   var state = 'idle';               // idle | play | sunk | done
   var hi = 0, strokes = 0, scores = [];
@@ -958,8 +1231,8 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   function inRect(px, py, r) { return px >= r[0] && px <= r[0] + r[2] && py >= r[1] && py <= r[1] + r[3]; }
   function inAny(list, px, py) { for (var i = 0; i < list.length; i++) if (inRect(px, py, list[i])) return true; return false; }
   function moverRect(m, ts) {
-    var a = m.om * ts + m.ph;
-    return { x: m.x, y: m.cy + m.amp * Math.sin(a) - m.h / 2, w: m.w, h: m.h, vy: m.amp * m.om * Math.cos(a) };
+    var a = m.om * MOVK * ts + m.ph;
+    return { x: m.x, y: m.cy + m.amp * Math.sin(a) - m.h / 2, w: m.w, h: m.h, vy: m.amp * m.om * MOVK * Math.cos(a) };
   }
   function moving() { return ball.vx !== 0 || ball.vy !== 0; }
   function canAim() { return state === 'play' && !moving(); }
@@ -1069,7 +1342,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     var total = sumScores();
     if (!best || total < best) {
       best = total; newBest = true;
-      try { localStorage.setItem(KEY, String(best)); } catch (e) {}
+      try { localStorage.setItem(keyFor(diff), String(best)); } catch (e) {}
     }
     setState('done');
     updateHud();
@@ -1118,7 +1391,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     }
   }
   function physics(dt) {
-    var n = 4, h = dt / n, hl = HOLES[hi];
+    var n = 4, h = dt / n, hl = LAY[hi];
     for (var i = 0; i < n && state === 'play'; i++) {
       var ts = gt + i * h;
       ball.x += ball.vx * h; ball.y += ball.vy * h;
@@ -1141,7 +1414,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
       var sp2 = Math.hypot(ball.vx, ball.vy);
       if (d < HOLE_R && sp2 < SINK_V) { sink(); return; }
       if (d < HOLE_R + 10 && sp2 > 0 && sp2 < SINK_V * 0.7) {      // легке притягування до лунки
-        var pull = 500 * h / Math.max(d, 1);
+        var pull = PULL * h / Math.max(d, 1);
         ball.vx += dx * pull; ball.vy += dy * pull;
       }
     }
@@ -1241,7 +1514,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   function drawBall() {
     if (state === 'sunk') return;
     ctx.save();
-    ctx.shadowColor = C.cyan; ctx.shadowBlur = 14; ctx.fillStyle = '#f2fbff';
+    ctx.shadowColor = window.arcadeSkin.ball; ctx.shadowBlur = 14; ctx.fillStyle = '#f2fbff';
     ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
@@ -1296,7 +1569,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     }
   }
   function draw() {
-    var hl = HOLES[hi];
+    var hl = LAY[hi];
     drawCourse(hl);
     drawHole(hl);
     drawBall();
@@ -1380,9 +1653,798 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     btnSound.blur();
   });
 
+  // Додаткові перешкоди: «Нормально» додає пісок і воду, «Складно» ще стіни й рухомі перешкоди
+  var EXTRA_N = [
+    { sand: [[300, 200, 110, 100]] },
+    { sand: [[470, 200, 100, 100]] },
+    { water: [[540, 150, 90, 70]] },
+    { sand: [[160, 360, 90, 100]] },
+    { sand: [[225, 200, 120, 100]] },
+    { sand: [[580, 190, 50, 120]] }
+  ];
+  var EXTRA_H = [
+    { walls: [[480, 12, 22, 215], [480, 273, 22, 215]] },
+    { movers: [{ x: 520, w: 20, h: 110, cy: 250, amp: 130, om: 1.3, ph: 0 }] },
+    { walls: [[560, 12, 22, 100]] },
+    { walls: [[560, 130, 22, 220]] },
+    { water: [[420, 390, 80, 50]], movers: [{ x: 610, w: 20, h: 90, cy: 250, amp: 150, om: 1.2, ph: 0 }] },
+    { water: [[400, 12, 60, 90], [400, 398, 60, 90]], movers: [{ x: 200, w: 22, h: 140, cy: 250, amp: 170, om: 1.6, ph: Math.PI / 2 }] }
+  ];
+  var LAY = HOLES;
+  function buildLay() {
+    LAY = HOLES.map(function (h, i) {
+      var o = { name: h.name, par: h.par, start: h.start, hole: h.hole,
+                walls: h.walls.slice(), sand: h.sand.slice(), water: h.water.slice(), movers: h.movers.slice() };
+      function add(ex) {
+        if (!ex) return;
+        ['walls', 'sand', 'water', 'movers'].forEach(function (k) { if (ex[k]) o[k] = o[k].concat(ex[k]); });
+      }
+      if (diff !== 'easy') add(EXTRA_N[i]);
+      if (diff === 'hard') add(EXTRA_H[i]);
+      return o;
+    });
+  }
+  // Складність гольфу: розмір лунки, найбільша швидкість «падіння», притягування, рухомі стіни, пісок
+  var DIFFS = {
+    easy:   { holeR: 14, sinkV: 420, pull: 700, mov: 0.7,  sand: 1100 },
+    normal: { holeR: 11, sinkV: 340, pull: 500, mov: 1,    sand: 1500 },
+    hard:   { holeR: 9,  sinkV: 270, pull: 300, mov: 1.35, sand: 1900 }
+  };
+  var diff = 'normal';
+  try { var savedDiff = localStorage.getItem('neon-golf-diff'); if (DIFFS[savedDiff]) diff = savedDiff; } catch (e) {}
+  function keyFor(d) { return d === 'normal' ? KEY : KEY + '-' + d; }
+  function applyDiff(name, fromUser) {
+    var d = DIFFS[name]; diff = name;
+    HOLE_R = d.holeR; SINK_V = d.sinkV; PULL = d.pull; MOVK = d.mov; SAND_DEC = d.sand;
+    buildLay();
+    try { best = parseInt(localStorage.getItem(keyFor(name)) || '0', 10) || 0; } catch (e) { best = 0; }
+    Array.prototype.forEach.call(document.querySelectorAll('#diff-golf [data-diff]'), function (b) {
+      b.setAttribute('aria-checked', b.getAttribute('data-diff') === name ? 'true' : 'false');
+    });
+    if (fromUser) {
+      try { localStorage.setItem('neon-golf-diff', name); } catch (e) {}
+      scores = []; newBest = false; dragging = false;
+      HOLES.forEach(function (h, i) { setResult(i, null); });
+      loadHole(0); setState('idle');      // нова складність діє з наступної партії
+    }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#diff-golf [data-diff]'), function (b) {
+    b.addEventListener('click', function () { applyDiff(b.getAttribute('data-diff'), true); b.blur(); });
+  });
+  applyDiff(diff, false);
+
   loadHole(0);
   setState('idle');
   requestAnimationFrame(frame);
+})();
+
+// ======================= Розділи, що згортаються =======================
+(function () {
+  'use strict';
+  var accs = Array.prototype.slice.call(document.querySelectorAll('details.acc'));
+  var btn = document.getElementById('accAll');
+  function sync() {
+    var all = accs.every(function (a) { return a.open; });
+    btn.textContent = all ? 'Згорнути все' : 'Розгорнути все';
+  }
+  btn.addEventListener('click', function () {
+    var open = !accs.every(function (a) { return a.open; });
+    accs.forEach(function (a) { a.open = open; });
+    sync(); btn.blur();
+  });
+  accs.forEach(function (a) { a.addEventListener('toggle', sync); });
+  function openFor(id) {
+    var t = id && document.getElementById(id);
+    if (t && t.tagName === 'DETAILS') { t.open = true; sync(); }
+  }
+  // Посилання з меню відкривають свій розділ, перш ніж браузер прокрутить до нього
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) openFor(a.getAttribute('href').slice(1));
+  });
+  window.addEventListener('hashchange', function () { openFor(location.hash.slice(1)); });
+  openFor(location.hash.slice(1));
+  sync();
+})();
+
+// ======================= Тетріс =======================
+(function () {
+  'use strict';
+  var COLS = 10, ROWS = 20, CS = 24, BX = 255, BY = 10, W = 750, H = 500;
+  var KEY = 'neon-tetris-best';
+  var C = { bg: '#07070f', grid: '#10122a', cyan: '#00ebff', magenta: '#ff2aa1', green: '#39ff78', gold: '#ffd728', red: '#ff4658' };
+  var DISPLAY = '"Exo 2", system-ui, sans-serif';
+  var MONO = '"Share Tech Mono", ui-monospace, Menlo, Consolas, monospace';
+  // Фігури 1..7: I O T S Z J L
+  var SHAPES = [null, [[1, 1, 1, 1]], [[1, 1], [1, 1]], [[0, 1, 0], [1, 1, 1]], [[0, 1, 1], [1, 1, 0]], [[1, 1, 0], [0, 1, 1]], [[1, 0, 0], [1, 1, 1]], [[0, 0, 1], [1, 1, 1]]];
+  var CLASSIC = [null, '#00ebff', '#ffd728', '#b45cff', '#39ff78', '#ff4658', '#2a7bff', '#ff9f2a'];
+  var GARB = '#5a6180';
+  var PTS = [0, 100, 300, 500, 800];
+  var KICKS = [[0, 0], [-1, 0], [1, 0], [-2, 0], [2, 0], [0, -1], [-1, -1], [1, -1], [0, -2]];
+  // Складність: стартовий рівень, множник інтервалу падіння, скільки наступних фігур видно, тінь, сміття раз на N фігур
+  var DIFFS = {
+    easy:   { lvl: 1, mul: 1.5, next: 3, ghost: true,  garb: 0 },
+    normal: { lvl: 1, mul: 1,   next: 2, ghost: true,  garb: 0 },
+    hard:   { lvl: 5, mul: 1,   next: 1, ghost: false, garb: 12 }
+  };
+  var diff = 'normal', D = DIFFS.normal;
+  try { var sd = localStorage.getItem('neon-tetris-diff'); if (DIFFS[sd]) diff = sd; } catch (e) {}
+
+  var panel = document.getElementById('panel-tetris');
+  var canvas = document.getElementById('tetrisBoard');
+  var ctx = canvas.getContext('2d');
+  window.fitCanvas(canvas, ctx, W, H);
+  var elScore = document.getElementById('tScore'), elBest = document.getElementById('tBest');
+  var elLevel = document.getElementById('tLevel'), elLines = document.getElementById('tLines');
+  var btnStart = document.getElementById('tStart'), btnPause = document.getElementById('tPause'), btnSound = document.getElementById('tSound');
+
+  var best = 0;
+  var state = 'idle';                // idle | play | pause | over
+  var board, cur, holdId, canHold, queue, pieces, score, lines, level;
+  var dropAcc, lockT, lockResets, clearRows, clearT, newRecord, flash;
+  var keys = {}, dasDir = 0, dasT = 0, nextRep = 170, touchSoft = false;
+  var t = 0, last = 0;
+
+  // ---------- Допоміжне ----------
+  function pad(n) { return String(n).padStart(4, '0'); }
+  function rgb(c) {
+    if (c.charAt(0) === '#') return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+    var m = c.match(/\d+/g); return [+m[0], +m[1], +m[2]];
+  }
+  function toHex(a) {
+    return '#' + a.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? '0' : '') + v.toString(16); }).join('');
+  }
+  function mixHex(a, b, k) { var x = rgb(a), y = rgb(b); return toHex([x[0] + (y[0] - x[0]) * k, x[1] + (y[1] - x[1]) * k, x[2] + (y[2] - x[2]) * k]); }
+  function shade(c, k) { var x = rgb(c); return 'rgb(' + Math.round(x[0] * k) + ',' + Math.round(x[1] * k) + ',' + Math.round(x[2] * k) + ')'; }
+  function colorOf(id) {
+    if (id === 8) return GARB;
+    var SK = window.arcadeSkin;
+    if (!SK || SK.id === 'neon') return CLASSIC[id];
+    return mixHex(SK.a, SK.b, (id - 1) / 6);       // інші скіни фарбують фігури градієнтом
+  }
+  function emptyRow() { var r = []; for (var i = 0; i < COLS; i++) r.push(0); return r; }
+
+  // ---------- Звук ----------
+  var audio = null, muted = false;
+  function ensureAudio() {
+    if (muted) return;
+    try {
+      if (!audio) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
+      if (audio && audio.state === 'suspended') audio.resume().catch(function () {});
+    } catch (e) { audio = null; }
+  }
+  function tone(f0, f1, dur, vol, delay) {
+    if (!audio || muted) return;
+    try {
+      var t0 = audio.currentTime + (delay || 0);
+      var o = audio.createOscillator(), g = audio.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f0, t0);
+      o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t0 + dur);
+      g.gain.setValueAtTime(vol || 0.1, t0);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(audio.destination);
+      o.start(t0); o.stop(t0 + dur);
+    } catch (e) {}
+  }
+  function sfxRot() { tone(760, 760, 0.03, 0.06); }
+  function sfxLock() { tone(170, 90, 0.07, 0.12); }
+  function sfxClear(n) { for (var i = 0; i < n + 1; i++) tone(520 + i * 160, 520 + i * 160, 0.08, 0.1, i * 0.06); }
+  function sfxOver() { tone(420, 60, 0.7, 0.14); }
+
+  // ---------- Логіка ----------
+  function collides(m, x, y) {
+    for (var r = 0; r < m.length; r++) for (var c = 0; c < m[r].length; c++) {
+      if (!m[r][c]) continue;
+      var bx = x + c, by = y + r;
+      if (bx < 0 || bx >= COLS || by >= ROWS) return true;
+      if (by >= 0 && board[by][bx]) return true;
+    }
+    return false;
+  }
+  function rot(m) {                 // за годинниковою стрілкою
+    var h = m.length, w = m[0].length, out = [];
+    for (var r = 0; r < w; r++) { out.push([]); for (var c = 0; c < h; c++) out[r].push(m[h - 1 - c][r]); }
+    return out;
+  }
+  function refill() {
+    while (queue.length < 7) {
+      var bag = [1, 2, 3, 4, 5, 6, 7];                // «мішок на 7»: кожна фігура раз за круг
+      for (var i = bag.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = bag[i]; bag[i] = bag[j]; bag[j] = tmp; }
+      queue = queue.concat(bag);
+    }
+  }
+  function spawn(id) {
+    var m = SHAPES[id].map(function (r) { return r.slice(); });
+    cur = { id: id, m: m, x: Math.floor((COLS - m[0].length) / 2), y: 0 };
+    if (collides(m, cur.x, cur.y)) gameOver();
+  }
+  function takeNext() {
+    refill(); var id = queue.shift(); refill();
+    dropAcc = 0; lockT = 0; lockResets = 0;
+    spawn(id);
+  }
+  function addGarbage() {
+    if (board[0].some(Boolean)) { gameOver(); return false; }
+    board.shift();
+    var row = [], hole = Math.floor(Math.random() * COLS);
+    for (var c = 0; c < COLS; c++) row.push(c === hole ? 0 : 8);
+    board.push(row);
+    showFlash('Сміття!', C.red);
+    return true;
+  }
+  function nextPiece() {
+    pieces++;
+    if (D.garb && pieces > 1 && (pieces - 1) % D.garb === 0 && !addGarbage()) return;
+    takeNext();
+    canHold = true;
+  }
+  function touchLock() { if (cur && collides(cur.m, cur.x, cur.y + 1) && lockResets < 15) { lockT = 0; lockResets++; } }
+  function move(dx) {
+    if (!cur || state !== 'play' || clearT > 0) return false;
+    if (collides(cur.m, cur.x + dx, cur.y)) return false;
+    cur.x += dx; touchLock(); return true;
+  }
+  function rotateCur(dir) {
+    if (!cur || state !== 'play' || clearT > 0) return;
+    var m = cur.m, h = m.length, w = m[0].length, nm = rot(m);
+    if (dir < 0) nm = rot(rot(nm));
+    var nh = nm.length, nw = nm[0].length;
+    var nx = cur.x + Math.floor((w - nw) / 2), ny = Math.max(0, cur.y + Math.floor((h - nh) / 2));
+    for (var i = 0; i < KICKS.length; i++) {
+      if (!collides(nm, nx + KICKS[i][0], ny + KICKS[i][1])) {
+        cur.m = nm; cur.x = nx + KICKS[i][0]; cur.y = ny + KICKS[i][1];
+        touchLock(); sfxRot(); return;
+      }
+    }
+  }
+  function ghostY() { var y = cur.y; while (!collides(cur.m, cur.x, y + 1)) y++; return y; }
+  function hardDrop() {
+    if (!cur || state !== 'play' || clearT > 0) return;
+    var y = ghostY(); score += 2 * (y - cur.y); cur.y = y;
+    lock();
+  }
+  function holdPiece() {
+    if (!cur || !canHold || state !== 'play' || clearT > 0) return;
+    var id = cur.id; canHold = false;
+    if (holdId) { var hid = holdId; holdId = id; dropAcc = 0; lockT = 0; lockResets = 0; spawn(hid); }
+    else { holdId = id; takeNext(); }
+    sfxRot();
+  }
+  function lock() {
+    var m = cur.m, out = false;
+    for (var r = 0; r < m.length; r++) for (var c = 0; c < m[r].length; c++) {
+      if (!m[r][c]) continue;
+      var by = cur.y + r, bx = cur.x + c;
+      if (by < 0) { out = true; continue; }
+      board[by][bx] = cur.id;
+    }
+    sfxLock(); cur = null;
+    if (out) { gameOver(); return; }
+    var rows = [];
+    for (var y = 0; y < ROWS; y++) if (board[y].every(Boolean)) rows.push(y);
+    if (rows.length) { clearRows = rows; clearT = 320; sfxClear(rows.length); }
+    else nextPiece();
+    updateHud();
+  }
+  function finishClear() {
+    var n = clearRows.length;
+    for (var i = clearRows.length - 1; i >= 0; i--) board.splice(clearRows[i], 1);
+    for (var k = 0; k < n; k++) board.unshift(emptyRow());
+    score += PTS[n] * level; lines += n;
+    level = D.lvl + Math.floor(lines / 10);
+    var names = ['', 'Лінія', 'Дві лінії!', 'Три лінії!', 'ТЕТРІС!'];
+    showFlash(names[n], n === 4 ? C.gold : C.cyan);
+    clearRows = [];
+    updateHud();
+    nextPiece();
+  }
+  function showFlash(text, color) { flash = { text: text, color: color, t0: t }; }
+  function setState(s) {
+    state = s;
+    btnStart.textContent = s === 'idle' ? 'Старт' : 'Заново';
+    btnPause.disabled = !(s === 'play' || s === 'pause');
+    btnPause.textContent = s === 'pause' ? 'Далі' : 'Пауза';
+  }
+  function resetGame() {
+    board = []; for (var r = 0; r < ROWS; r++) board.push(emptyRow());
+    cur = null; holdId = 0; canHold = true; queue = []; pieces = 0;
+    score = 0; lines = 0; level = D.lvl; dropAcc = 0; lockT = 0; lockResets = 0;
+    clearRows = []; clearT = 0; newRecord = false; flash = null;
+    dasDir = 0; keys = {}; touchSoft = false;
+    refill();
+    updateHud();
+  }
+  function start() { ensureAudio(); resetGame(); setState('play'); nextPiece(); }
+  function togglePause() { if (state === 'play') setState('pause'); else if (state === 'pause') setState('play'); }
+  function toMenu() { resetGame(); setState('idle'); }
+  function gameOver() {
+    if (state === 'over') return;
+    setState('over'); sfxOver();
+    if (score > best) {
+      best = score; newRecord = true;
+      try { localStorage.setItem(keyFor(diff), String(best)); } catch (e) {}
+    }
+    updateHud();
+  }
+  function updateHud() {
+    elScore.textContent = pad(score); elBest.textContent = pad(best);
+    elLevel.textContent = level; elLines.textContent = lines;
+  }
+  function startDas(dir) { move(dir); dasDir = dir; dasT = 0; nextRep = 170; }
+  function update(dt) {
+    if (flash && t - flash.t0 > 1500) flash = null;
+    if (state !== 'play') return;
+    if (clearT > 0) { clearT -= dt; if (clearT <= 0) finishClear(); return; }
+    if (!cur) return;
+    if (dasDir) { dasT += dt; while (dasT >= nextRep && cur) { move(dasDir); nextRep += 55; } }
+    var soft = !!(keys.ArrowDown || keys.KeyS || touchSoft);
+    var base = Math.max(60, 800 * Math.pow(0.85, level - 1)) * D.mul;
+    var iv = soft ? Math.min(base, 45) : base;
+    if (!collides(cur.m, cur.x, cur.y + 1)) {
+      lockT = 0; dropAcc += dt;
+      while (dropAcc >= iv && !collides(cur.m, cur.x, cur.y + 1)) { dropAcc -= iv; cur.y++; if (soft) score += 1; }
+      if (soft) updateHud();
+    } else {
+      dropAcc = 0; lockT += dt;
+      if (lockT >= 500) lock();
+    }
+  }
+
+  // ---------- Малювання ----------
+  function glowText(text, x, y, font, color, blur) {
+    ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = blur; ctx.fillText(text, x, y); ctx.restore();
+  }
+  function cell(px, py, color, alpha, glow) {
+    ctx.save();
+    if (alpha != null) ctx.globalAlpha = alpha;
+    ctx.fillStyle = shade(color, 0.28); ctx.fillRect(px + 1, py + 1, CS - 2, CS - 2);
+    ctx.fillStyle = color; ctx.fillRect(px + 5, py + 5, CS - 10, CS - 10);
+    if (glow) { ctx.shadowColor = color; ctx.shadowBlur = 10; }
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.strokeRect(px + 1.5, py + 1.5, CS - 3, CS - 3);
+    ctx.restore();
+  }
+  function mini(id, cx, cy, dim) {
+    var m = SHAPES[id], s = 18, w = m[0].length, h = m.length, ox = cx - w * s / 2, oy = cy - h * s / 2, col = colorOf(id);
+    ctx.save();
+    if (dim) ctx.globalAlpha = 0.35;
+    for (var r = 0; r < h; r++) for (var c = 0; c < w; c++) {
+      if (!m[r][c]) continue;
+      ctx.fillStyle = shade(col, 0.3); ctx.fillRect(ox + c * s + 1, oy + r * s + 1, s - 2, s - 2);
+      ctx.fillStyle = col; ctx.fillRect(ox + c * s + 4, oy + r * s + 4, s - 8, s - 8);
+      ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.strokeRect(ox + c * s + 1.5, oy + r * s + 1.5, s - 3, s - 3);
+    }
+    ctx.restore();
+  }
+  function box(x, y, w, h, title) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(13,14,31,0.8)'; ctx.fillRect(x, y, w, h);
+    ctx.shadowColor = C.magenta; ctx.shadowBlur = 10; ctx.strokeStyle = C.magenta; ctx.lineWidth = 1.5; ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    ctx.restore();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#8f96c0'; ctx.font = '15px ' + MONO; ctx.fillText(title, x + w / 2, y + 18);
+  }
+  function drawField() {
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (var i = 0; i <= W / 25; i++) { ctx.moveTo(i * 25 + 0.5, 0); ctx.lineTo(i * 25 + 0.5, H); }
+    for (var j = 0; j <= H / 25; j++) { ctx.moveTo(0, j * 25 + 0.5); ctx.lineTo(W, j * 25 + 0.5); }
+    ctx.stroke();
+    ctx.fillStyle = '#05050d'; ctx.fillRect(BX, BY, COLS * CS, ROWS * CS);
+    ctx.strokeStyle = '#0d0f24'; ctx.beginPath();
+    for (var x = 1; x < COLS; x++) { ctx.moveTo(BX + x * CS + 0.5, BY); ctx.lineTo(BX + x * CS + 0.5, BY + ROWS * CS); }
+    for (var y = 1; y < ROWS; y++) { ctx.moveTo(BX, BY + y * CS + 0.5); ctx.lineTo(BX + COLS * CS, BY + y * CS + 0.5); }
+    ctx.stroke();
+    ctx.save(); ctx.shadowColor = C.cyan; ctx.shadowBlur = 16; ctx.strokeStyle = C.cyan; ctx.lineWidth = 2;
+    ctx.strokeRect(BX - 1, BY - 1, COLS * CS + 2, ROWS * CS + 2); ctx.restore();
+  }
+  function drawBoardCells() {
+    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+      if (board[r][c]) cell(BX + c * CS, BY + r * CS, colorOf(board[r][c]));
+    }
+    if (clearT > 0) {                                    // миготіння ліній, що зникають
+      var a = 0.25 + 0.6 * Math.abs(Math.sin(clearT / 40));
+      clearRows.forEach(function (r) { ctx.fillStyle = 'rgba(255,255,255,' + a + ')'; ctx.fillRect(BX, BY + r * CS, COLS * CS, CS); });
+    }
+  }
+  function drawPiece() {
+    if (!cur) return;
+    var col = colorOf(cur.id), r, c;
+    if (D.ghost) {
+      var gy = ghostY();
+      for (r = 0; r < cur.m.length; r++) for (c = 0; c < cur.m[r].length; c++) {
+        if (!cur.m[r][c]) continue;
+        ctx.save(); ctx.globalAlpha = 0.4; ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+        ctx.strokeRect(BX + (cur.x + c) * CS + 2.5, BY + (gy + r) * CS + 2.5, CS - 5, CS - 5); ctx.restore();
+      }
+    }
+    for (r = 0; r < cur.m.length; r++) for (c = 0; c < cur.m[r].length; c++) {
+      if (!cur.m[r][c] || cur.y + r < 0) continue;
+      cell(BX + (cur.x + c) * CS, BY + (cur.y + r) * CS, col, null, true);
+    }
+  }
+  function drawSide() {
+    box(40, 40, 170, 120, 'ЗАПАС');
+    if (holdId) mini(holdId, 125, 108, !canHold);
+    var n = D.next;
+    box(540, 40, 170, 40 + n * 62, 'ДАЛІ');
+    for (var i = 0; i < n; i++) mini(queue[i], 625, 98 + i * 62);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#8f96c0'; ctx.font = '15px ' + MONO;
+    ctx.fillText('Тінь: ' + (D.ghost ? 'є' : 'немає'), 40, 200);
+    if (D.garb) ctx.fillText('Сміття: кожні ' + D.garb + ' фігур', 40, 226);
+  }
+  function drawFlash() {
+    if (!flash) return;
+    var age = t - flash.t0;
+    ctx.save(); ctx.globalAlpha = 1 - age / 1500; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    glowText(flash.text, BX + COLS * CS / 2, 200 - age / 40, '800 38px ' + DISPLAY, flash.color, 16);
+    ctx.restore();
+  }
+  function drawOverlay() {
+    if (state === 'play') return;
+    ctx.fillStyle = 'rgba(4,4,12,0.76)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var cx = W / 2, cy = H / 2;
+    if (state === 'idle') {
+      var pk = 0.5 + 0.5 * Math.sin(t / 400);
+      glowText('NEON TETRIS', cx, cy - 70, '800 62px ' + DISPLAY, mixHex(C.cyan, C.magenta, pk), 22);
+      glowText('Enter або клік: старт', cx, cy + 10, '28px ' + MONO, C.green, 12);
+      glowText('Рекорд: ' + best, cx, cy + 58, '22px ' + MONO, C.gold, 10);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '16px ' + MONO;
+      ctx.fillText('←/→ рух · ↑ поворот · Пробіл скинути · C запас', cx, cy + 110);
+    } else if (state === 'pause') {
+      glowText('ПАУЗА', cx, cy - 20, '800 64px ' + DISPLAY, C.cyan, 22);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '20px ' + MONO;
+      ctx.fillText('P: продовжити · Esc: меню', cx, cy + 40);
+    } else {
+      glowText('GAME OVER', cx, cy - 90, '800 64px ' + DISPLAY, C.red, 22);
+      glowText('Рахунок: ' + score, cx, cy - 20, '28px ' + MONO, C.cyan, 10);
+      glowText('Рекорд: ' + best, cx, cy + 20, '28px ' + MONO, C.magenta, 10);
+      if (newRecord && Math.floor(t / 350) % 2 === 0) glowText('★ НОВИЙ РЕКОРД! ★', cx, cy + 62, '22px ' + MONO, C.gold, 12);
+      ctx.fillStyle = '#8f96c0'; ctx.font = '20px ' + MONO;
+      ctx.fillText('Enter: грати знову · Esc: меню', cx, cy + 110);
+    }
+  }
+  function draw() {
+    drawField(); drawBoardCells(); drawPiece(); drawSide(); drawFlash(); drawOverlay();
+  }
+  function frame(ts) {
+    if (panel.hidden) { last = ts; requestAnimationFrame(frame); return; }
+    var dt = Math.min(ts - (last || ts), 100);
+    last = ts; t += dt;
+    update(dt); draw();
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- Керування ----------
+  var GAMEKEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'KeyA', 'KeyD', 'KeyW', 'KeyS', 'KeyX', 'KeyZ', 'KeyC', 'ShiftLeft', 'ShiftRight'];
+  document.addEventListener('keydown', function (e) {
+    if (panel.hidden) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var c = e.code, onControl = e.target && e.target.closest && e.target.closest('a,button');
+    if (GAMEKEYS.indexOf(c) >= 0) {
+      if (c === 'Space' && onControl) return;
+      if (state === 'play') e.preventDefault();
+      if (e.repeat) return;
+      keys[c] = true;
+      if (state !== 'play') return;
+      if (c === 'ArrowLeft' || c === 'KeyA') startDas(-1);
+      else if (c === 'ArrowRight' || c === 'KeyD') startDas(1);
+      else if (c === 'ArrowUp' || c === 'KeyW' || c === 'KeyX') rotateCur(1);
+      else if (c === 'KeyZ') rotateCur(-1);
+      else if (c === 'Space') hardDrop();
+      else if (c === 'KeyC' || c === 'ShiftLeft' || c === 'ShiftRight') holdPiece();
+      return;
+    }
+    if (c === 'KeyP') { if (state === 'play' || state === 'pause') { e.preventDefault(); togglePause(); } return; }
+    if (c === 'Escape') { if (state !== 'idle') toMenu(); return; }
+    if (c === 'Enter' || c === 'NumpadEnter') {
+      if (onControl) return;
+      if (state === 'idle' || state === 'over') { e.preventDefault(); start(); }
+    }
+  });
+  document.addEventListener('keyup', function (e) {
+    delete keys[e.code];
+    var c = e.code;
+    if ((c === 'ArrowLeft' || c === 'KeyA') && dasDir === -1) { dasDir = (keys.ArrowRight || keys.KeyD) ? 1 : 0; dasT = 0; nextRep = 170; }
+    if ((c === 'ArrowRight' || c === 'KeyD') && dasDir === 1) { dasDir = (keys.ArrowLeft || keys.KeyA) ? -1 : 0; dasT = 0; nextRep = 170; }
+  });
+  function releaseAll() { keys = {}; dasDir = 0; touchSoft = false; }
+  window.addEventListener('blur', releaseAll);
+  window.addEventListener('arcade-tab', function (e) { releaseAll(); if (e.detail !== 'tetris' && state === 'play') setState('pause'); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden && state === 'play') setState('pause'); });
+
+  // Сенсорні кнопки
+  Array.prototype.forEach.call(document.querySelectorAll('#tpad [data-act]'), function (b) {
+    var act = b.getAttribute('data-act');
+    b.addEventListener('pointerdown', function (e) {
+      e.preventDefault();
+      if (state !== 'play') return;
+      if (act === 'left') startDas(-1);
+      else if (act === 'right') startDas(1);
+      else if (act === 'rot') rotateCur(1);
+      else if (act === 'soft') touchSoft = true;
+      else if (act === 'drop') hardDrop();
+      else if (act === 'hold') holdPiece();
+    });
+    function up() {
+      if (act === 'left' && dasDir === -1) dasDir = 0;
+      if (act === 'right' && dasDir === 1) dasDir = 0;
+      if (act === 'soft') touchSoft = false;
+    }
+    b.addEventListener('pointerup', up); b.addEventListener('pointerleave', up); b.addEventListener('pointercancel', up);
+  });
+
+  // Жести по полю: рух, дотик = поворот, швидкий свайп вниз = скинути
+  var g = null;
+  canvas.addEventListener('pointerdown', function (e) {
+    g = { x0: e.clientX, y0: e.clientY, lx: e.clientX, acc: 0, moved: false, t0: Date.now() };
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!g || state !== 'play') return;
+    var k = W / canvas.getBoundingClientRect().width;
+    g.acc += (e.clientX - g.lx) * k; g.lx = e.clientX;
+    while (Math.abs(g.acc) >= CS) { var s = g.acc > 0 ? 1 : -1; move(s); g.acc -= s * CS; g.moved = true; }
+  });
+  canvas.addEventListener('pointerup', function (e) {
+    if (!g) return;
+    var k = W / canvas.getBoundingClientRect().width;
+    var dx = (e.clientX - g.x0) * k, dy = (e.clientY - g.y0) * k, dt = Date.now() - g.t0;
+    var gg = g; g = null;
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && dt < 400) {
+      if (state === 'idle' || state === 'over') start();
+      else if (state === 'pause') togglePause();
+      else rotateCur(1);
+      return;
+    }
+    if (!gg.moved && dy > 90 && dt < 400 && Math.abs(dx) < 60) hardDrop();
+  });
+  canvas.addEventListener('pointercancel', function () { g = null; });
+
+  btnStart.addEventListener('click', function () { start(); btnStart.blur(); });
+  btnPause.addEventListener('click', function () { togglePause(); btnPause.blur(); });
+  btnSound.addEventListener('click', function () {
+    muted = !muted;
+    btnSound.textContent = muted ? 'Звук: ні' : 'Звук: так';
+    btnSound.setAttribute('aria-pressed', muted ? 'false' : 'true');
+    if (!muted) ensureAudio();
+    btnSound.blur();
+  });
+
+  // ---------- Складність ----------
+  function keyFor(d) { return d === 'normal' ? KEY : KEY + '-' + d; }
+  function applyDiff(name, fromUser) {
+    diff = name; D = DIFFS[name];
+    try { best = parseInt(localStorage.getItem(keyFor(name)) || '0', 10) || 0; } catch (e) { best = 0; }
+    Array.prototype.forEach.call(document.querySelectorAll('#diff-tetris [data-diff]'), function (b) {
+      b.setAttribute('aria-checked', b.getAttribute('data-diff') === name ? 'true' : 'false');
+    });
+    if (fromUser) {
+      try { localStorage.setItem('neon-tetris-diff', name); } catch (e) {}
+      resetGame(); setState('idle');          // нова складність діє з наступної партії
+    }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#diff-tetris [data-diff]'), function (b) {
+    b.addEventListener('click', function () { applyDiff(b.getAttribute('data-diff'), true); b.blur(); });
+  });
+  applyDiff(diff, false);
+  resetGame();
+  setState('idle');
+  requestAnimationFrame(frame);
+})();
+
+// ======================= Фонова музика: три стилі, що генеруються в браузері =======================
+(function () {
+  'use strict';
+  var KEY = 'neon-arcade-music', VKEY = 'neon-arcade-music-vol', SKEY = 'neon-arcade-music-style';
+  var btn = document.getElementById('btnMusic'), vol = document.getElementById('musicVol');
+  var chips = document.querySelectorAll('[data-music]');
+  var CHORDS = [[45, 57, 60, 64, 71], [41, 53, 57, 60, 64], [48, 55, 59, 64, 67], [43, 55, 59, 62, 64]];   // Am9 · Fmaj7 · Cmaj7 · G6
+  var PENT = [69, 72, 74, 76, 79, 81];
+  var on = true, volume = 0.5, style = 'calm';
+  try {
+    if (localStorage.getItem(KEY) === 'off') on = false;
+    var sv = parseFloat(localStorage.getItem(VKEY));
+    if (sv >= 0 && sv <= 1) volume = sv;
+    var ss = localStorage.getItem(SKEY);
+    if (ss === 'calm' || ss === 'drive' || ss === 'arcade') style = ss;
+  } catch (e) {}
+  vol.value = Math.round(volume * 100);
+
+  var ac = null, master = null, rv = null, dlIn = null, bus = null, noiseBuf = null;
+  var nextT = 0, bar = 0, timer = null, failed = false;
+  function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  function level() { return on ? volume * 0.5 : 0; }
+
+  function build() {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) { failed = true; return; }
+    ac = new AC();
+    master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+    var len = Math.floor(ac.sampleRate * 3), buf = ac.createBuffer(2, len, ac.sampleRate);
+    for (var c = 0; c < 2; c++) {
+      var d = buf.getChannelData(c);
+      for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
+    }
+    rv = ac.createConvolver(); rv.buffer = buf;
+    var wet = ac.createGain(); wet.gain.value = 0.5; rv.connect(wet); wet.connect(master);
+    dlIn = ac.createGain();                                          // м'яке відлуння для дзвіночків
+    var dl = ac.createDelay(1.5); dl.delayTime.value = 0.62;
+    var fb = ac.createGain(); fb.gain.value = 0.36;
+    var lo = ac.createBiquadFilter(); lo.type = 'lowpass'; lo.frequency.value = 1800;
+    dlIn.connect(dl); dl.connect(lo); lo.connect(fb); fb.connect(dl); lo.connect(rv);
+    var nl = ac.sampleRate, nb = ac.createBuffer(1, nl, nl), nd = nb.getChannelData(0);
+    for (var j = 0; j < nl; j++) nd[j] = Math.random() * 2 - 1;      // білий шум для барабанів
+    noiseBuf = nb;
+  }
+  function newBus() {
+    var g = ac.createGain();
+    g.gain.setValueAtTime(0.0001, ac.currentTime);
+    g.gain.linearRampToValueAtTime(1, ac.currentTime + 1.5);
+    g.connect(master); g.connect(rv);
+    return g;
+  }
+  // Одна нота: тип хвилі, частота, початок, тривалість, гучність, атака, вихід, зріз фільтра
+  function note(type, f, t, dur, v, att, dest, lp) {
+    var o = ac.createOscillator(), g = ac.createGain(), out = g;
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(v, t + att);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    if (lp) { var fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = lp; g.connect(fl); out = fl; }
+    out.connect(dest); o.start(t); o.stop(t + dur + 0.05);
+  }
+  function kick(t, v, dest) {
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+    o.connect(g); g.connect(dest); o.start(t); o.stop(t + 0.3);
+  }
+  function hiss(t, dur, v, hp, dest) {
+    var s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    s.buffer = noiseBuf; f.type = 'highpass'; f.frequency.value = hp;
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(dest); s.start(t); s.stop(t + dur + 0.02);
+  }
+  function pad(m, t, len, dest, att, v) {
+    var f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900;
+    var g = ac.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(v, t + att);
+    g.gain.setValueAtTime(v, t + len - 0.2);
+    g.gain.linearRampToValueAtTime(0.0001, t + len + 3);
+    f.connect(g); g.connect(dest);
+    [['sine', 0], ['triangle', 6]].forEach(function (w) {
+      var o = ac.createOscillator(); o.type = w[0]; o.frequency.value = hz(m); o.detune.value = w[1];
+      o.connect(f); o.start(t); o.stop(t + len + 3.2);
+    });
+  }
+  function bell(m, t, dest) {
+    var o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = hz(m);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.07, t + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
+    o.connect(g); g.connect(dest); g.connect(dlIn); o.start(t); o.stop(t + 3.3);
+  }
+
+  var STYLES = {
+    // Спокійна: довгі акорди та рідкі дзвінкі ноти
+    calm: { len: 8, play: function (t, idx, dest) {
+      CHORDS[idx % 4].forEach(function (m) { pad(m, t, 8, dest, 2.6, 0.05); });
+      for (var k = 0; k < 4; k++) {
+        if (Math.random() < 0.85) bell(PENT[Math.floor(Math.random() * PENT.length)], t + 0.8 + k * 1.9 + Math.random() * 0.8, dest);
+      }
+    } },
+    // Драйв: синтвейв, 96 ударів на хвилину, бас, арпеджіо, м'яка бочка
+    drive: { len: 2.5, play: function (t, idx, dest) {
+      var beat = 0.625, step = beat / 4;
+      var roots = [45, 41, 48, 43], tones = [[57, 60, 64], [53, 57, 60], [55, 60, 64], [55, 59, 62]];
+      var root = roots[idx % 4], tn = tones[idx % 4], i;
+      tn.forEach(function (m) { pad(m - 12, t, 2.5, dest, 0.5, 0.03); });
+      for (i = 0; i < 4; i++) { kick(t + i * beat, 0.32, dest); hiss(t + i * beat + beat / 2, 0.05, 0.05, 7000, dest); }
+      for (i = 0; i < 8; i++) note('sawtooth', hz(root + (i % 4 === 3 ? 12 : 0)), t + i * beat / 2, 0.32, 0.1, 0.01, dest, 420);
+      var pat = [0, 1, 2, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 0, 1, 2];
+      for (i = 0; i < 16; i++) note('sawtooth', hz(tn[pat[i]] + 12), t + i * step, 0.22, 0.028, 0.01, dest, 2200);
+    } },
+    // Аркада: чіптюн, 120 ударів на хвилину, квадратна мелодія й трикутний бас
+    arcade: { len: 2, play: function (t, idx, dest) {
+      var beat = 0.5, bassRoots = [36, 33, 29, 31], i;
+      var phrases = [[72, 76, 79, 76, 81, 79, 76, 74], [72, 74, 76, 79, 76, 74, 72, 67], [79, 81, 79, 76, 74, 76, 72, 72], [76, 79, 81, 84, 81, 79, 76, 74]];
+      var ph = phrases[idx % 4];
+      for (i = 0; i < 8; i++) note('square', hz(ph[i]), t + i * beat / 2, 0.22, 0.032, 0.005, dest, 3000);
+      for (i = 0; i < 4; i++) note('triangle', hz(bassRoots[idx % 4] + (i % 2 ? 12 : 0)), t + i * beat, 0.4, 0.14, 0.01, dest);
+      kick(t, 0.3, dest); kick(t + 2 * beat, 0.3, dest);
+      hiss(t + beat, 0.12, 0.07, 2500, dest); hiss(t + 3 * beat, 0.12, 0.07, 2500, dest);
+    } }
+  };
+
+  function schedule() {
+    if (!ac || ac.state !== 'running') return;
+    if (nextT < ac.currentTime) nextT = ac.currentTime + 0.1;
+    var st = STYLES[style];
+    while (nextT < ac.currentTime + 1.5) { st.play(nextT, bar, bus); nextT += st.len; bar++; }
+  }
+  function applyLevel() {
+    if (!ac) return;
+    var t = ac.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(level(), t + (on ? 3 : 0.6));
+  }
+  function paintStyle() {
+    Array.prototype.forEach.call(chips, function (b) { b.setAttribute('aria-checked', b.getAttribute('data-music') === style ? 'true' : 'false'); });
+  }
+  function setStyle(name, save) {
+    if (!STYLES[name]) name = 'calm';
+    style = name; paintStyle();
+    if (save) { try { localStorage.setItem(SKEY, name); } catch (e) {} }
+    if (ac && bus) {                                   // плавний перехід: старий стиль затихає, новий наростає
+      var old = bus, now = ac.currentTime;
+      old.gain.cancelScheduledValues(now);
+      old.gain.setValueAtTime(old.gain.value, now);
+      old.gain.linearRampToValueAtTime(0.0001, now + 1.2);
+      setTimeout(function () { try { old.disconnect(); } catch (e) {} }, 4500);
+      bus = newBus(); nextT = now + 0.2; bar = 0; schedule();
+    }
+  }
+  function start() {
+    if (failed || !on) return;
+    try {
+      if (!ac) { build(); if (ac) bus = newBus(); }
+      if (!ac) return;
+      if (ac.state === 'suspended') ac.resume().catch(function () {});
+      if (!timer) timer = setInterval(schedule, 400);
+      schedule(); applyLevel();
+    } catch (e) { failed = true; btn.disabled = true; vol.disabled = true; }
+  }
+  function stop() {
+    applyLevel();
+    if (ac) setTimeout(function () { if (!on && ac && ac.state === 'running') ac.suspend().catch(function () {}); }, 800);
+  }
+  function paint() {
+    btn.textContent = '♪ Музика: ' + (on ? 'так' : 'ні');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    vol.disabled = !on;
+  }
+  function setOn(v) {
+    on = v;
+    try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {}
+    paint();
+    if (on) start(); else stop();
+  }
+  btn.addEventListener('click', function () { setOn(!on); btn.blur(); });
+  Array.prototype.forEach.call(chips, function (b) {
+    b.addEventListener('click', function () {
+      setStyle(b.getAttribute('data-music'), true);
+      if (!on) setOn(true);                            // вибір стилю вмикає музику
+      b.blur();
+    });
+  });
+  vol.addEventListener('input', function () {
+    volume = vol.value / 100;
+    try { localStorage.setItem(VKEY, String(volume)); } catch (e) {}
+    applyLevel();
+  });
+  // Браузер дозволяє звук лише після дії користувача: музика стартує з першого кліку чи натискання клавіші
+  function firstGesture() {
+    document.removeEventListener('pointerdown', firstGesture, true);
+    document.removeEventListener('keydown', firstGesture, true);
+    start();
+  }
+  document.addEventListener('pointerdown', firstGesture, true);
+  document.addEventListener('keydown', firstGesture, true);
+  document.addEventListener('visibilitychange', function () {
+    if (!ac) return;
+    if (document.hidden) { try { ac.suspend(); } catch (e) {} }
+    else if (on) { try { ac.resume(); } catch (e) {} }
+  });
+  paintStyle();
+  paint();
 })();
 </script>
 
