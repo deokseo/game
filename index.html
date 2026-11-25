@@ -261,6 +261,44 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
 .musicbar { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin-bottom: 12px; }
 .arcade.fs .musicbar { width: 100%; max-width: 1100px; }
 
+/* Шкала рекордів і піаніно */
+.chip[aria-pressed="true"] { color: var(--cyan); border-color: var(--cyan); background: rgba(0,235,255,.1); }
+.recgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.reccard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 14px; min-width: 0; }
+.reccard h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
+.recrow { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding-block: 8px; }
+.recrow .d { grid-row: 1 / 3; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.scale { position: relative; height: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+.scale .fill { position: absolute; inset: 0 auto 0 0; border-radius: 6px; background: var(--dim); }
+.scale .tick { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--dim); opacity: .7; }
+.recrow .val { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; min-width: 74px; }
+.recrow .badge { grid-column: 2 / 4; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
+.fill.t1 { background: var(--green); box-shadow: 0 0 10px rgba(57,255,120,.5); }
+.fill.t2 { background: var(--cyan); box-shadow: 0 0 10px rgba(0,235,255,.5); }
+.fill.t3 { background: var(--gold); box-shadow: 0 0 12px rgba(255,215,40,.6); }
+.badge.t1 { color: var(--green); } .badge.t2 { color: var(--cyan); } .badge.t3 { color: var(--gold); }
+.reccard .legend { margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--dim); font-family: var(--mono); font-size: 12px; line-height: 1.5; }
+.rectop { margin-top: 24px; }
+.rectop ol { list-style: none; margin: 12px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.rectop li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto auto; gap: 4px 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 15px; }
+.rectop li .rk { color: var(--dim); }
+.rectop li .sc { color: var(--fg); font-variant-numeric: tabular-nums; }
+.rectop li .dt { color: var(--dim); font-size: 13px; }
+.rectop li.empty { display: block; color: var(--dim); }
+.pill { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line); border-radius: 20px; padding: 2px 10px; white-space: nowrap; }
+.recfoot { margin-top: 22px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; color: var(--dim); font-size: .95rem; }
+
+.oct { font-family: var(--mono); font-size: 14px; color: var(--cyan); min-width: 62px; text-align: center; }
+.keys { position: relative; display: flex; height: clamp(150px, 32vw, 240px); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #05050d; touch-action: none; -webkit-user-select: none; user-select: none; }
+.key.w { flex: 1 1 0; min-width: 0; background: linear-gradient(180deg, #eef3ff 0%, #cdd8f6 100%); border-right: 1px solid #8f9bc7; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; font-family: var(--mono); font-size: 12px; color: #4a5280; cursor: pointer; }
+.key.w:last-child { border-right: 0; }
+.key.w.on { background: linear-gradient(180deg, #92f5ff 0%, #00ebff 100%); box-shadow: inset 0 -6px 14px rgba(0,60,90,.35), 0 0 18px rgba(0,235,255,.55); color: #032a33; }
+.key.b { position: absolute; top: 0; height: 62%; z-index: 2; background: linear-gradient(180deg, #171a36, #05060f); border: 1px solid #2a2f5e; border-top: 0; border-radius: 0 0 5px 5px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px; font-family: var(--mono); font-size: 11px; color: #8f96c0; cursor: pointer; }
+.key.b.on { background: linear-gradient(180deg, #ff77c2, #ff2aa1); box-shadow: 0 0 14px rgba(255,42,161,.7); color: #fff; }
+.pinfo { margin: 12px 0 0; display: flex; gap: 6px 18px; flex-wrap: wrap; font-family: var(--mono); font-size: 14px; color: var(--dim); }
+.pinfo #pNote { color: var(--cyan); min-width: 64px; }
+@media (orientation: landscape) and (max-height: 540px) { .game.pianogame { display: block; } }
+
 .foot { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 13px; color: var(--dim); letter-spacing: .04em; }
 
 @media (max-width: 920px) {
@@ -290,9 +328,11 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
     </div>
     <nav class="nav" aria-label="Розділи">
       <a href="#play">Гра</a>
+      <a href="#records">Рекорди</a>
       <a href="#rules">Правила</a>
       <a href="#golf">Міні-гольф</a>
       <a href="#tetris">Тетріс</a>
+      <a href="#piano">Піаніно</a>
       <a href="#levels">Швидкість</a>
       <a href="#run">Запуск на ПК</a>
       <a href="#ideas">Ідеї</a>
@@ -304,9 +344,9 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
       <div>
         <p class="eyebrow">Python · Pygame · Canvas</p>
         <h1>Неонові ігри, які <span class="glow-c">світяться</span></h1>
-        <p class="lead">Змійка з версії для ПК, міні-гольф і тетріс. Перемикайте ігри вкладками й грайте прямо в браузері, а змійку можна запустити і на комп'ютері.</p>
+        <p class="lead">Змійка з версії для ПК, міні-гольф і тетріс, а ще піаніно, на якому можна зіграти власну мелодію. Перемикайте вкладки й грайте прямо в браузері, а змійку можна запустити і на комп'ютері.</p>
         <dl class="facts">
-          <div><dt>3 гри</dt><dd>змійка, гольф і тетріс у вкладках</dd></div>
+          <div><dt>3 гри</dt><dd>змійка, гольф і тетріс, а ще піаніно</dd></div>
           <div><dt>6 лунок</dt><dd>з піском, водою і рухомими стінами</dd></div>
           <div><dt id="factBonus">5 с</dt><dd>живе бонус у змійці</dd></div>
           <div><dt id="factMin">55 мс</dt><dd>найшвидший крок змійки</dd></div>
@@ -322,6 +362,7 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
           <button class="tab" role="tab" id="tabSnake" data-tab="snake" aria-selected="true" aria-controls="panel-snake" type="button">Змійка</button>
           <button class="tab" role="tab" id="tabGolf" data-tab="golf" aria-selected="false" aria-controls="panel-golf" type="button">Міні-гольф</button>
           <button class="tab" role="tab" id="tabTetris" data-tab="tetris" aria-selected="false" aria-controls="panel-tetris" type="button">Тетріс</button>
+          <button class="tab" role="tab" id="tabPiano" data-tab="piano" aria-selected="false" aria-controls="panel-piano" type="button">Піаніно</button>
           <button class="tab fsbtn" id="btnFs" type="button" aria-pressed="false">На весь екран</button>
         </div>
         <div class="musicbar">
@@ -444,10 +485,64 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
             <p class="hint"><span class="kb">←/→ або A/D: рух · ↑/W/X: поворот · Z: проти годинникової · ↓/S: прискорити · Пробіл: скинути · C/Shift: запас · P: пауза · Esc: меню</span><span class="touch">Проведіть пальцем по полю, щоб рухати фігуру, торкніться, щоб повернути, швидко проведіть вниз, щоб скинути. Або користуйтеся кнопками.</span></p>
           </div>
         </div>
+        <div id="panel-piano" role="tabpanel" aria-labelledby="tabPiano" hidden>
+          <div class="game pianogame">
+            <div class="opts">
+              <div class="optgroup" id="pInst" role="radiogroup" aria-label="Інструмент">
+                <span class="k">Звук</span>
+                <button class="chip" type="button" role="radio" aria-checked="true" data-inst="piano">Піаніно</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-inst="synth">Синт</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-inst="bell">Дзвони</button>
+                <button class="chip" type="button" role="radio" aria-checked="false" data-inst="organ">Орган</button>
+              </div>
+              <div class="optgroup">
+                <span class="k">Октава</span>
+                <button class="chip" id="pOctDown" type="button" aria-label="Октава нижче">−</button>
+                <span class="oct" id="pOct">C3–C5</span>
+                <button class="chip" id="pOctUp" type="button" aria-label="Октава вище">+</button>
+              </div>
+              <div class="optgroup">
+                <button class="chip" id="pSustain" type="button" aria-pressed="false">Педаль: ні</button>
+                <button class="chip" id="pLabels" type="button">Підписи: клавіші</button>
+              </div>
+            </div>
+            <div class="keys" id="pKeys" aria-label="Клавіатура піаніно"></div>
+            <div class="controls">
+              <button class="btn" id="pRec" type="button">● Запис</button>
+              <button class="btn" id="pPlay" type="button" disabled>▶ Відтворити</button>
+              <button class="btn" id="pDemo" type="button">♫ Демо</button>
+              <button class="btn" id="pClear" type="button" disabled>Очистити</button>
+            </div>
+            <p class="pinfo"><span id="pNote">♪ —</span><span id="pInfo">Натисніть «Запис» і зіграйте мелодію</span></p>
+            <div class="power"><span class="k">Гучність</span><input type="range" id="pVol" min="0" max="100" value="80" aria-label="Гучність піаніно"></div>
+            <p class="hint"><span class="kb">Нижній ряд: Z X C V B N M , . / (чорні: S D G H J L ;). Верхній ряд: Q W E R T Y U I (чорні: 2 3 5 6 7). Пробіл: педаль. ←/→: октава.</span><span class="touch">Торкайтеся клавіш, кілька пальців одночасно. Проведіть пальцем по клавішах, щоб зіграти гліссандо.</span></p>
+          </div>
+        </div>
       </div>
     </section>
 
     <div class="accbar"><span class="k">Правила, таблиці й ідеї</span><button class="btn" id="accAll" type="button">Розгорнути все</button></div>
+    <details class="section acc" id="records" open>
+      <summary><h2>Шкала рекордів</h2><span class="sum">Найкращі результати в усіх іграх і складностях</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody">
+        <p class="intro">Тут зібрані ваші найкращі результати в цьому браузері. Шкала показує, як далеко до рівня «Легенда», а нижче видно п'ять кращих партій.</p>
+        <div class="recgrid" id="recGrid"></div>
+        <div class="rectop">
+          <div class="optgroup" role="radiogroup" aria-label="Гра для списку">
+            <span class="k">Кращі партії</span>
+            <button class="chip" type="button" role="radio" aria-checked="true" data-rec="snake">Змійка</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-rec="golf">Міні-гольф</button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-rec="tetris">Тетріс</button>
+          </div>
+          <ol id="recList"></ol>
+        </div>
+        <div class="recfoot">
+          <button class="btn" id="recReset" type="button">Скинути рекорди</button>
+          <span id="recAsk" hidden>Точно скинути всі рекорди? <button class="btn" id="recYes" type="button">Так, скинути</button> <button class="btn" id="recNo" type="button">Ні</button></span>
+        </div>
+      </div>
+    </details>
+
     <details class="section acc" id="rules">
       <summary><h2>Правила змійки</h2><span class="sum">Керування, їжа, бонус, швидкість, програш</span><span class="chev" aria-hidden="true"></span></summary>
       <div class="accbody">
@@ -557,6 +652,35 @@ html.fs-lock, html.fs-lock body { overflow: hidden; }
         <article class="rule">
           <h3><span class="sw best"></span>Рекорд</h3>
           <p>Рекорд зберігається окремо для кожної складності, у цьому браузері.</p>
+        </article>
+      </div></div>
+    </details>
+
+    <details class="section acc" id="piano">
+      <summary><h2>Піаніно</h2><span class="sum">Клавіші, інструменти, педаль і запис мелодії</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="accbody"><p class="intro">Дві октави з верхньою нотою до. Грати можна мишею, пальцями на екрані або клавіатурою комп'ютера. Фонова музика на цій вкладці затихає, щоб було чути вашу гру.</p>
+      <div class="rules">
+        <article class="rule">
+          <h3><span class="sw keys"></span>Клавіатура комп'ютера</h3>
+          <p>Нижній ряд грає першу октаву, верхній другу. Чорні клавіші лежать у рядку над білими.</p>
+          <div class="keys-row" aria-label="Нижній ряд"><kbd>Z</kbd><kbd>X</kbd><kbd>C</kbd><kbd>V</kbd><kbd>B</kbd><kbd>N</kbd><kbd>M</kbd></div>
+          <div class="keys-row" aria-label="Верхній ряд"><kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd><kbd>T</kbd><kbd>Y</kbd><kbd>U</kbd></div>
+        </article>
+        <article class="rule">
+          <h3><span class="sw hole"></span>Дотик</h3>
+          <p>Кілька пальців грають акорд. Якщо вести палець по клавішах, не відриваючи, вийде гліссандо.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw food"></span>Звуки</h3>
+          <p>Піаніно, синт, дзвони й орган. Дзвони дзвенять довше, орган звучить, поки клавішу тримають, а піаніно затихає саме.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw speed"></span>Педаль і октави</h3>
+          <p>Педаль (пробіл) продовжує звучання нот після відпускання клавіш. Кнопки «−» і «+» або стрілки ←/→ зсувають клавіатуру на октаву.</p>
+        </article>
+        <article class="rule">
+          <h3><span class="sw best"></span>Запис і демо</h3>
+          <p>«Запис» запам'ятовує вашу мелодію до хвилини, «Відтворити» програє її з підсвічуванням клавіш. «Демо» грає «Оду до радості» Бетховена. Запис зберігається в цьому браузері.</p>
         </article>
       </div></div>
     </details>
@@ -712,6 +836,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var audio = null, muted = false;
   function ensureAudio() {
     if (muted) return;
+    if (window.arcadeUnlockAudio) window.arcadeUnlockAudio();
     try {
       if (!audio) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
       if (audio && audio.state === 'suspended') audio.resume().catch(function () {});
@@ -801,6 +926,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
       best = score; newRecord = true;
       try { localStorage.setItem(keyFor(diff), String(best)); } catch (e) {}
     }
+    if (score > 0 && window.arcadeRecords) window.arcadeRecords.add('snake', diff, score);
     updateHud();
   }
   function turn(d) {
@@ -1134,6 +1260,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   Array.prototype.forEach.call(document.querySelectorAll('#diff-snake [data-diff]'), function (b) {
     b.addEventListener('click', function () { applyDiff(b.getAttribute('data-diff'), true); b.blur(); });
   });
+  window.addEventListener('arcade-reset', function () { best = 0; newRecord = false; updateHud(); });
   applyDiff(diff, false);
   reset();
   setState('idle');
@@ -1144,7 +1271,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
 (function () {
   'use strict';
   var tabs = document.querySelectorAll('[data-tab]');
-  var panels = { snake: document.getElementById('panel-snake'), golf: document.getElementById('panel-golf'), tetris: document.getElementById('panel-tetris') };
+  var panels = { snake: document.getElementById('panel-snake'), golf: document.getElementById('panel-golf'), tetris: document.getElementById('panel-tetris'), piano: document.getElementById('panel-piano') };
   function select(name) {
     Array.prototype.forEach.call(tabs, function (b) {
       b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false');
@@ -1247,6 +1374,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var audio = null, muted = false, lastTick = 0;
   function ensureAudio() {
     if (muted) return;
+    if (window.arcadeUnlockAudio) window.arcadeUnlockAudio();
     try {
       if (!audio) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
       if (audio && audio.state === 'suspended') audio.resume().catch(function () {});
@@ -1350,6 +1478,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
       best = total; newBest = true;
       try { localStorage.setItem(keyFor(diff), String(best)); } catch (e) {}
     }
+    if (window.arcadeRecords) window.arcadeRecords.add('golf', diff, total);
     setState('done');
     updateHud();
   }
@@ -1717,6 +1846,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   Array.prototype.forEach.call(document.querySelectorAll('#diff-golf [data-diff]'), function (b) {
     b.addEventListener('click', function () { applyDiff(b.getAttribute('data-diff'), true); b.blur(); });
   });
+  window.addEventListener('arcade-reset', function () { best = 0; newBest = false; updateHud(); });
   applyDiff(diff, false);
 
   loadHole(0);
@@ -1814,6 +1944,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var audio = null, muted = false;
   function ensureAudio() {
     if (muted) return;
+    if (window.arcadeUnlockAudio) window.arcadeUnlockAudio();
     try {
       if (!audio) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) audio = new AC(); }
       if (audio && audio.state === 'suspended') audio.resume().catch(function () {});
@@ -1971,6 +2102,7 @@ window.fitCanvas = function (canvas, ctx, W, H) {
       best = score; newRecord = true;
       try { localStorage.setItem(keyFor(diff), String(best)); } catch (e) {}
     }
+    if (score > 0 && window.arcadeRecords) window.arcadeRecords.add('tetris', diff, score);
     updateHud();
   }
   function updateHud() {
@@ -2235,10 +2367,478 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   Array.prototype.forEach.call(document.querySelectorAll('#diff-tetris [data-diff]'), function (b) {
     b.addEventListener('click', function () { applyDiff(b.getAttribute('data-diff'), true); b.blur(); });
   });
+  window.addEventListener('arcade-reset', function () { best = 0; newRecord = false; updateHud(); });
   applyDiff(diff, false);
   resetGame();
   setState('idle');
   requestAnimationFrame(frame);
+})();
+
+// ======================= Шкала рекордів =======================
+(function () {
+  'use strict';
+  var GAMES = {
+    snake:  { name: 'Змійка',     key: 'neon-snake-best',  low: false, th: [100, 300, 600] },
+    golf:   { name: 'Міні-гольф', key: 'neon-golf-best',   low: true,  th: [28, 23, 19], par: 19, cap: 40 },
+    tetris: { name: 'Тетріс',     key: 'neon-tetris-best', low: false, th: [2000, 8000, 25000] }
+  };
+  var ORDER = ['snake', 'golf', 'tetris'], DIFFS = ['easy', 'normal', 'hard'];
+  var DN = { easy: 'Легко', normal: 'Нормально', hard: 'Складно' };
+  var TIERS = ['Новачок', 'Гравець', 'Майстер', 'Легенда'];
+  var RUNS_KEY = 'neon-arcade-runs', SEED_KEY = 'neon-arcade-runs-seeded';
+  var sel = 'snake';
+  var grid = document.getElementById('recGrid'), list = document.getElementById('recList');
+  var chips = document.querySelectorAll('[data-rec]');
+
+  function suffix(d) { return d === 'normal' ? '' : '-' + d; }
+  function bestOf(g, d) {
+    try { var v = parseInt(localStorage.getItem(GAMES[g].key + suffix(d)) || '0', 10); return v > 0 ? v : 0; } catch (e) { return 0; }
+  }
+  function loadRuns() {
+    try { var a = JSON.parse(localStorage.getItem(RUNS_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+  }
+  function saveRuns(a) { try { localStorage.setItem(RUNS_KEY, JSON.stringify(a)); } catch (e) {} }
+  function quality(g, a, b) { return GAMES[g].low ? a - b : b - a; }      // менше число краще: від'ємне = a краще
+  function fmt(g, s) {
+    if (!GAMES[g].low) return String(s);
+    var d = s - GAMES[g].par;
+    return s + ' (' + (d === 0 ? 'пар' : (d > 0 ? '+' : '') + d) + ')';
+  }
+  function tierOf(g, s) {
+    var G = GAMES[g], n = 0;
+    for (var i = 0; i < 3; i++) if (G.low ? s <= G.th[i] : s >= G.th[i]) n = i + 1;
+    return n;
+  }
+  function frac(g, s) {
+    var G = GAMES[g];
+    if (G.low) return Math.max(0, Math.min(1, (G.cap - s) / (G.cap - G.th[2])));
+    return Math.max(0, Math.min(1, s / G.th[2]));
+  }
+  function tickPos(g, i) { return Math.round(frac(g, GAMES[g].th[i]) * 100); }
+  function legend(g) {
+    var G = GAMES[g], t = G.th;
+    if (G.low) return 'Гравець до ' + t[0] + ' · Майстер до ' + t[1] + ' · Легенда до ' + t[2] + ' ударів. Пар поля: ' + G.par + '.';
+    return 'Гравець від ' + t[0] + ' · Майстер від ' + t[1] + ' · Легенда від ' + t[2] + ' очок.';
+  }
+
+  // Старі рекорди, збережені до появи історії, потрапляють у список один раз
+  function seed() {
+    var done = false;
+    try { done = localStorage.getItem(SEED_KEY) === '1'; } catch (e) {}
+    if (done) return;
+    var runs = loadRuns();
+    ORDER.forEach(function (g) { DIFFS.forEach(function (d) {
+      var b = bestOf(g, d);
+      if (b && !runs.some(function (r) { return r.g === g && r.d === d && r.s === b; })) runs.push({ g: g, d: d, s: b, t: 0 });
+    }); });
+    saveRuns(runs);
+    try { localStorage.setItem(SEED_KEY, '1'); } catch (e) {}
+  }
+  function add(g, d, s) {
+    if (!GAMES[g] || !(s > 0)) return;
+    var runs = loadRuns();
+    runs.push({ g: g, d: d, s: s, t: Date.now() });
+    var keep = [];                                   // для кожної гри лишаємо 25 найкращих
+    ORDER.forEach(function (k) {
+      keep = keep.concat(runs.filter(function (r) { return r.g === k; }).sort(function (a, b) { return quality(k, a.s, b.s) || b.t - a.t; }).slice(0, 25));
+    });
+    saveRuns(keep);
+    window.dispatchEvent(new CustomEvent('arcade-records'));
+  }
+
+  function render() {
+    var html = '';
+    ORDER.forEach(function (g) {
+      var G = GAMES[g], rows = '';
+      DIFFS.forEach(function (d) {
+        var b = bestOf(g, d), t = b ? tierOf(g, b) : 0, f = b ? Math.round(frac(g, b) * 100) : 0;
+        rows += '<div class="recrow"><span class="d">' + DN[d] + '</span>' +
+          '<div class="scale" role="img" aria-label="' + G.name + ', ' + DN[d] + ': ' + (b ? fmt(g, b) : 'немає рекорду') + '">' +
+          '<div class="fill t' + t + '" style="width:' + f + '%"></div>' +
+          '<i class="tick" style="left:' + tickPos(g, 0) + '%"></i><i class="tick" style="left:' + tickPos(g, 1) + '%"></i><i class="tick" style="left:' + tickPos(g, 2) + '%"></i></div>' +
+          '<span class="val">' + (b ? fmt(g, b) : '—') + '</span>' +
+          '<span class="badge t' + t + '">' + (b ? TIERS[t] : 'Немає рекорду') + '</span></div>';
+      });
+      html += '<article class="reccard"><h3>' + G.name + '</h3>' + rows + '<p class="legend">' + legend(g) + '</p></article>';
+    });
+    grid.innerHTML = html;
+
+    var runs = loadRuns().filter(function (r) { return r.g === sel; })
+      .sort(function (a, b) { return quality(sel, a.s, b.s) || b.t - a.t; }).slice(0, 5);
+    var li = '';
+    runs.forEach(function (r, i) {
+      var dt = '—';
+      if (r.t) { var D = new Date(r.t); dt = ('0' + D.getDate()).slice(-2) + '.' + ('0' + (D.getMonth() + 1)).slice(-2); }
+      li += '<li><span class="rk">#' + (i + 1) + '</span><span class="sc">' + fmt(sel, r.s) + '</span><span class="pill">' + DN[r.d] + '</span><span class="dt">' + dt + '</span></li>';
+    });
+    list.innerHTML = li || '<li class="empty">Партій ще немає. Зіграйте, щоб потрапити в список.</li>';
+    Array.prototype.forEach.call(chips, function (b) { b.setAttribute('aria-checked', b.getAttribute('data-rec') === sel ? 'true' : 'false'); });
+  }
+
+  Array.prototype.forEach.call(chips, function (b) {
+    b.addEventListener('click', function () { sel = b.getAttribute('data-rec'); render(); b.blur(); });
+  });
+  var btnReset = document.getElementById('recReset'), ask = document.getElementById('recAsk');
+  btnReset.addEventListener('click', function () { ask.hidden = false; btnReset.hidden = true; });
+  document.getElementById('recNo').addEventListener('click', function () { ask.hidden = true; btnReset.hidden = false; });
+  document.getElementById('recYes').addEventListener('click', function () {
+    try {
+      ORDER.forEach(function (g) { DIFFS.forEach(function (d) { localStorage.removeItem(GAMES[g].key + suffix(d)); }); });
+      localStorage.removeItem(RUNS_KEY);
+      localStorage.setItem(SEED_KEY, '1');
+    } catch (e) {}
+    ask.hidden = true; btnReset.hidden = false;
+    window.dispatchEvent(new CustomEvent('arcade-reset'));
+    render();
+  });
+  window.addEventListener('arcade-records', render);
+  window.arcadeRecords = { add: add };
+  seed();
+  render();
+})();
+
+// ======================= Піаніно =======================
+(function () {
+  'use strict';
+  var panel = document.getElementById('panel-piano');
+  var keysEl = document.getElementById('pKeys');
+  var elOct = document.getElementById('pOct'), elNote = document.getElementById('pNote'), elInfo = document.getElementById('pInfo');
+  var btnDown = document.getElementById('pOctDown'), btnUp = document.getElementById('pOctUp');
+  var btnSustain = document.getElementById('pSustain'), btnLabels = document.getElementById('pLabels');
+  var btnRec = document.getElementById('pRec'), btnPlay = document.getElementById('pPlay'), btnDemo = document.getElementById('pDemo'), btnClear = document.getElementById('pClear');
+  var vol = document.getElementById('pVol');
+  var instChips = document.querySelectorAll('#pInst [data-inst]');
+
+  var NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  var BLACK = { 1: 1, 3: 1, 6: 1, 8: 1, 10: 1 };
+  var RANGE = 24;                                      // клавіші від 0 до 24 півтонів: дві октави та верхня «до»
+  var LOW = ['Z', 'S', 'X', 'D', 'C', 'V', 'G', 'B', 'H', 'N', 'J', 'M'];
+  var HIGH = ['Q', '2', 'W', '3', 'E', 'R', '5', 'T', '6', 'Y', '7', 'U', 'I'];     // півтони 12..24
+  var KEYMAP = { KeyZ: 0, KeyS: 1, KeyX: 2, KeyD: 3, KeyC: 4, KeyV: 5, KeyG: 6, KeyB: 7, KeyH: 8, KeyN: 9, KeyJ: 10, KeyM: 11,
+    Comma: 12, KeyL: 13, Period: 14, Semicolon: 15, Slash: 16,
+    KeyQ: 12, Digit2: 13, KeyW: 14, Digit3: 15, KeyE: 16, KeyR: 17, Digit5: 18, KeyT: 19, Digit6: 20, KeyY: 21, Digit7: 22, KeyU: 23, KeyI: 24 };
+  var INSTS = { piano: { rel: 0.12 }, synth: { rel: 0.22 }, bell: { rel: 1.4 }, organ: { rel: 0.05 } };
+  var LABEL_TEXT = ['Підписи: клавіші', 'Підписи: ноти', 'Підписи: без'];
+  var PREFS = 'neon-piano-prefs', RECKEY = 'neon-piano-rec';
+
+  var oct = 3, inst = 'piano', pedal = false, labelMode = 0;
+  try { if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) labelMode = 1; } catch (e) {}
+  try {
+    var pf = JSON.parse(localStorage.getItem(PREFS) || 'null');
+    if (pf) {
+      if (INSTS[pf.inst]) inst = pf.inst;
+      if (pf.oct >= 1 && pf.oct <= 5) oct = pf.oct;
+      if (pf.labels >= 0 && pf.labels <= 2) labelMode = pf.labels;
+      if (pf.vol >= 0 && pf.vol <= 100) vol.value = pf.vol;
+    }
+  } catch (e) {}
+  function savePrefs() { try { localStorage.setItem(PREFS, JSON.stringify({ inst: inst, oct: oct, labels: labelMode, vol: +vol.value })); } catch (e) {} }
+  function base() { return 12 * (oct + 1); }
+  function nameOf(m) { return NAMES[m % 12] + (Math.floor(m / 12) - 1); }
+
+  // ---------- Клавіатура на екрані ----------
+  var keyEls = [];
+  (function build() {
+    var whites = 0, s;
+    for (s = 0; s <= RANGE; s++) if (!BLACK[s % 12]) whites++;
+    var bw = 100 / whites, wi = 0;
+    keysEl.innerHTML = '';
+    for (s = 0; s <= RANGE; s++) {
+      var k = document.createElement('div'), black = !!BLACK[s % 12];
+      k.className = 'key ' + (black ? 'b' : 'w');
+      k.setAttribute('data-s', s);
+      if (black) { k.style.left = (wi * bw - bw * 0.31) + '%'; k.style.width = (bw * 0.62) + '%'; } else wi++;
+      keysEl.appendChild(k);
+      keyEls[s] = k;
+    }
+  })();
+  function refreshLabels() {
+    for (var s = 0; s <= RANGE; s++) {
+      keyEls[s].textContent = labelMode === 0 ? (s <= 11 ? LOW[s] : HIGH[s - 12]) : labelMode === 1 ? nameOf(base() + s) : '';
+    }
+    elOct.textContent = 'C' + oct + '–C' + (oct + 2);
+    btnLabels.textContent = LABEL_TEXT[labelMode];
+  }
+
+  // ---------- Звук ----------
+  var ac = null, master = null, wet = null, holds = {}, voices = {}, sustained = {};
+  function ready() { return !!ac && ac.state === 'running'; }
+  function ensure() {
+    if (window.arcadeUnlockAudio) window.arcadeUnlockAudio();
+    try {
+      if (!ac) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return false;
+        ac = new AC();
+        master = ac.createGain(); master.gain.value = vol.value / 100 * 1.2;
+        var comp = ac.createDynamicsCompressor();
+        comp.threshold.value = -16; comp.knee.value = 20; comp.ratio.value = 5; comp.attack.value = 0.005; comp.release.value = 0.2;
+        master.connect(comp); comp.connect(ac.destination);
+        var len = Math.floor(ac.sampleRate * 2), buf = ac.createBuffer(2, len, ac.sampleRate);
+        for (var c = 0; c < 2; c++) { var d = buf.getChannelData(c); for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+        var rv = ac.createConvolver(); rv.buffer = buf;
+        wet = ac.createGain(); wet.gain.value = 0.22; rv.connect(wet); wet.connect(master);
+        wet.reverbIn = rv;
+      }
+      if (ac.state !== 'running') ac.resume().catch(function () {});
+      return ac.state === 'running';
+    } catch (e) { return false; }
+  }
+  function voiceOn(m) {
+    if (!ensure()) return false;
+    if (voices[m]) stopVoice(m, 0.02);
+    var f = 440 * Math.pow(2, (m - 69) / 12), t = ac.currentTime;
+    var rel = ac.createGain(); rel.gain.value = 1; rel.connect(master); rel.connect(wet.reverbIn);
+    var env = ac.createGain(); env.connect(rel);
+    var tgt = env, oscs = [];
+    function osc(type, mult, g, det) {
+      var o = ac.createOscillator(), og = ac.createGain();
+      o.type = type; o.frequency.value = f * mult; if (det) o.detune.value = det;
+      og.gain.value = g; o.connect(og); og.connect(tgt); o.start(t); oscs.push(o);
+    }
+    var dur;
+    if (inst === 'piano') {
+      var lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.min(9000, 1400 + f * 5); lp.connect(env); tgt = lp;
+      osc('sine', 1, 1); osc('sine', 1, 0.5, 3); osc('sine', 2, 0.4); osc('sine', 3, 0.16); osc('sine', 4, 0.07);
+      dur = Math.max(1.6, 7 - (m - 36) * 0.06);
+      env.gain.setValueAtTime(0.0001, t); env.gain.linearRampToValueAtTime(0.28, t + 0.004);
+      env.gain.exponentialRampToValueAtTime(0.1, t + 0.5); env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    } else if (inst === 'synth') {
+      var sl = ac.createBiquadFilter(); sl.type = 'lowpass'; sl.frequency.value = 1900; sl.connect(env); tgt = sl;
+      osc('sawtooth', 1, 0.5, 7); osc('sawtooth', 1, 0.5, -7); osc('square', 0.5, 0.25);
+      env.gain.setValueAtTime(0.0001, t); env.gain.linearRampToValueAtTime(0.2, t + 0.03);
+    } else if (inst === 'bell') {
+      osc('sine', 1, 1); osc('sine', 2.76, 0.4); osc('sine', 5.4, 0.2); osc('sine', 8.93, 0.1);
+      dur = 4;
+      env.gain.setValueAtTime(0.0001, t); env.gain.linearRampToValueAtTime(0.26, t + 0.004); env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    } else {
+      osc('sine', 0.5, 0.3); osc('sine', 1, 1); osc('sine', 2, 0.5); osc('sine', 3, 0.25); osc('sine', 4, 0.15);
+      env.gain.setValueAtTime(0.0001, t); env.gain.linearRampToValueAtTime(0.15, t + 0.012);
+    }
+    if (dur) oscs.forEach(function (o) { try { o.stop(t + dur + 0.1); } catch (e) {} });     // затухлі ноти самі припиняють генератори
+    voices[m] = { rel: rel, oscs: oscs };
+    return true;
+  }
+  function stopVoice(m, tau) {
+    var v = voices[m];
+    if (!v || !ac) return;
+    var now = ac.currentTime;
+    try {
+      v.rel.gain.cancelScheduledValues(now); v.rel.gain.setValueAtTime(1, now); v.rel.gain.setTargetAtTime(0, now, tau);
+      v.oscs.forEach(function (o) { try { o.stop(now + tau * 8 + 0.1); } catch (e) {} });
+    } catch (e) {}
+    delete voices[m];
+  }
+
+  // ---------- Натискання нот ----------
+  var recording = false, rec = [], t0 = 0, recTimer = null, playing = null, timers = [];
+  function count(m) { return holds[m] ? Object.keys(holds[m]).length : 0; }
+  function mark(m) {
+    var s = m - base();
+    if (s < 0 || s > RANGE) return;
+    keyEls[s].classList.toggle('on', count(m) > 0);
+  }
+  function press(src, m) {
+    var set = holds[m] || (holds[m] = {});
+    if (set[src]) return;
+    set[src] = 1;
+    if (count(m) === 1) { delete sustained[m]; voiceOn(m); }
+    mark(m); elNote.textContent = '♪ ' + nameOf(m);
+    if (recording && src !== 'pb') recPush(m, 1);
+  }
+  function release(src, m) {
+    var set = holds[m];
+    if (!set || !set[src]) return;
+    delete set[src];
+    if (count(m) === 0) {
+      delete holds[m];
+      if (pedal) sustained[m] = 1; else stopVoice(m, INSTS[inst].rel);
+    }
+    mark(m);
+    if (recording && src !== 'pb') recPush(m, 0);
+  }
+  function setPedal(v) {
+    pedal = v;
+    btnSustain.textContent = 'Педаль: ' + (v ? 'так' : 'ні');
+    btnSustain.setAttribute('aria-pressed', v ? 'true' : 'false');
+    if (!v) {
+      Object.keys(sustained).forEach(function (k) { if (!holds[k]) stopVoice(+k, INSTS[inst].rel); });
+      sustained = {};
+    }
+  }
+  function releaseAll() {
+    Object.keys(holds).forEach(function (k) { var m = +k; delete holds[m]; stopVoice(m, 0.05); mark(m); });
+    Object.keys(sustained).forEach(function (k) { stopVoice(+k, 0.05); });
+    sustained = {};
+    for (var s = 0; s <= RANGE; s++) keyEls[s].classList.toggle('on', false);
+  }
+
+  // ---------- Запис і відтворення ----------
+  function recPush(m, d) {
+    if (rec.length >= 800) return;
+    rec.push({ t: Math.round(performance.now() - t0), m: m, d: d });
+    updateInfo();
+  }
+  function nt(n) {                                       // відмінювання: 1 ноту, 2 ноти, 5 нот
+    var a = n % 10, b = n % 100;
+    return n + (a === 1 && b !== 11 ? ' ноту' : (a >= 2 && a <= 4 && (b < 12 || b > 14)) ? ' ноти' : ' нот');
+  }
+  function updateInfo() {
+    var notes = rec.filter(function (e) { return e.d === 1; }).length;
+    if (recording) elInfo.textContent = '● Запис: ' + nt(notes);
+    else if (playing) elInfo.textContent = playing === 'demo' ? 'Грає демо: «Ода до радості»' : 'Відтворення запису';
+    else if (rec.length) elInfo.textContent = 'Запис: ' + nt(notes) + ', ' + (rec[rec.length - 1].t / 1000).toFixed(1) + ' с';
+    else elInfo.textContent = 'Натисніть «Запис» і зіграйте мелодію';
+    btnRec.textContent = recording ? '■ Стоп запис' : '● Запис';
+    btnPlay.textContent = playing === 'rec' ? '■ Стоп' : '▶ Відтворити';
+    btnDemo.textContent = playing === 'demo' ? '■ Стоп' : '♫ Демо';
+    btnPlay.disabled = !rec.length || recording || playing === 'demo';
+    btnDemo.disabled = recording || playing === 'rec';
+    btnClear.disabled = (!rec.length && !recording) || !!playing;
+  }
+  function startRec() {
+    stopPlay();
+    rec = []; t0 = performance.now(); recording = true;
+    recTimer = setTimeout(stopRec, 60000);                                  // запис не довше хвилини
+    updateInfo();
+  }
+  function stopRec() {
+    if (!recording) return;
+    recording = false; clearTimeout(recTimer);
+    Object.keys(holds).forEach(function (k) {                                 // закриваємо ноти, що ще тримають
+      var m = +k;
+      if (Object.keys(holds[m]).some(function (src) { return src !== 'pb'; })) rec.push({ t: Math.round(performance.now() - t0), m: m, d: 0 });
+    });
+    try { localStorage.setItem(RECKEY, JSON.stringify(rec)); } catch (e) {}
+    updateInfo();
+  }
+  function stopPlay() {
+    timers.forEach(clearTimeout); timers = [];
+    Object.keys(holds).forEach(function (k) { release('pb', +k); });
+    playing = null; updateInfo();
+  }
+  function startPlay(events, kind) {
+    stopPlay();
+    if (!events.length) return;
+    playing = kind;
+    events.forEach(function (ev) {
+      timers.push(setTimeout(function () { if (ev.d) press('pb', ev.m); else release('pb', ev.m); }, ev.t));
+    });
+    timers.push(setTimeout(stopPlay, events[events.length - 1].t + 900));
+    updateInfo();
+  }
+  function demoEvents() {                                                      // «Ода до радості», Бетховен (суспільне надбання)
+    var N = [[64, 1], [64, 1], [65, 1], [67, 1], [67, 1], [65, 1], [64, 1], [62, 1], [60, 1], [60, 1], [62, 1], [64, 1], [64, 1.5], [62, 0.5], [62, 2],
+             [64, 1], [64, 1], [65, 1], [67, 1], [67, 1], [65, 1], [64, 1], [62, 1], [60, 1], [60, 1], [62, 1], [64, 1], [62, 1.5], [60, 0.5], [60, 2]];
+    var ev = [], t = 300, beat = 470;
+    N.forEach(function (n) {
+      ev.push({ t: Math.round(t), m: n[0], d: 1 });
+      ev.push({ t: Math.round(t + n[1] * beat * 0.9), m: n[0], d: 0 });
+      t += n[1] * beat;
+    });
+    return ev;
+  }
+  try {
+    var saved = JSON.parse(localStorage.getItem(RECKEY) || 'null');
+    if (Array.isArray(saved)) rec = saved.filter(function (e) { return e && typeof e.t === 'number' && typeof e.m === 'number'; }).slice(0, 800);
+  } catch (e) {}
+
+  // ---------- Керування: клавіатура комп'ютера ----------
+  var kmidi = {};
+  function shiftOct(d) {
+    var n = Math.max(1, Math.min(5, oct + d));
+    if (n === oct) return;
+    releaseAll(); oct = n; refreshLabels(); savePrefs();
+  }
+  document.addEventListener('keydown', function (e) {
+    if (panel.hidden) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var c = e.code, inField = e.target && e.target.tagName === 'INPUT';
+    if (Object.prototype.hasOwnProperty.call(KEYMAP, c)) {
+      e.preventDefault();
+      if (!e.repeat && !kmidi[c]) { kmidi[c] = base() + KEYMAP[c]; press('k' + c, kmidi[c]); }
+      return;
+    }
+    if (inField) return;
+    if (c === 'Space') { e.preventDefault(); if (!e.repeat) setPedal(true); }
+    else if (c === 'ArrowLeft') { e.preventDefault(); shiftOct(-1); }
+    else if (c === 'ArrowRight') { e.preventDefault(); shiftOct(1); }
+  });
+  document.addEventListener('keyup', function (e) {
+    if (panel.hidden) return;
+    var c = e.code;
+    if (kmidi[c]) { release('k' + c, kmidi[c]); delete kmidi[c]; }
+    else if (c === 'Space') setPedal(false);
+  });
+
+  // ---------- Керування: миша й дотик (кілька пальців, гліссандо) ----------
+  var ptr = {}, lastM = 0;
+  function keyAt(x, y) {
+    var el = document.elementFromPoint(x, y), k = el && el.closest ? el.closest('.key') : null;
+    return k ? parseInt(k.getAttribute('data-s'), 10) : -1;
+  }
+  keysEl.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    var s = keyAt(e.clientX, e.clientY);
+    if (s < 0) return;
+    try { keysEl.setPointerCapture(e.pointerId); } catch (err) {}
+    ptr[e.pointerId] = base() + s; lastM = ptr[e.pointerId];
+    press('m' + e.pointerId, ptr[e.pointerId]);
+  });
+  keysEl.addEventListener('pointermove', function (e) {
+    if (!(e.pointerId in ptr)) return;
+    var s = keyAt(e.clientX, e.clientY), m = s < 0 ? -1 : base() + s;
+    if (m === ptr[e.pointerId]) return;
+    release('m' + e.pointerId, ptr[e.pointerId]);
+    if (m >= 0) { ptr[e.pointerId] = m; lastM = m; press('m' + e.pointerId, m); } else delete ptr[e.pointerId];
+  });
+  function pointerUp(e) {
+    if (!(e.pointerId in ptr)) return;
+    release('m' + e.pointerId, ptr[e.pointerId]);
+    delete ptr[e.pointerId];
+    if (!ready()) {                       // перший дотик на телефоні лише розблоковує звук, тому граємо ноту після відпускання
+      ensure();
+      if (ac) ac.resume().then(function () {
+        if (ac.state !== 'running' || !lastM) return;
+        var m = lastM; voiceOn(m); setTimeout(function () { if (!count(m)) stopVoice(m, INSTS[inst].rel); }, 450);
+      }).catch(function () {});
+    }
+  }
+  keysEl.addEventListener('pointerup', pointerUp);
+  keysEl.addEventListener('pointercancel', pointerUp);
+  window.addEventListener('pointerup', pointerUp);
+
+  // ---------- Кнопки ----------
+  function setInst(name) {
+    inst = name;
+    Array.prototype.forEach.call(instChips, function (b) { b.setAttribute('aria-checked', b.getAttribute('data-inst') === name ? 'true' : 'false'); });
+    savePrefs();
+  }
+  Array.prototype.forEach.call(instChips, function (b) {
+    b.addEventListener('click', function () { setInst(b.getAttribute('data-inst')); b.blur(); });
+  });
+  btnDown.addEventListener('click', function () { shiftOct(-1); btnDown.blur(); });
+  btnUp.addEventListener('click', function () { shiftOct(1); btnUp.blur(); });
+  btnSustain.addEventListener('click', function () { setPedal(!pedal); btnSustain.blur(); });
+  btnLabels.addEventListener('click', function () { labelMode = (labelMode + 1) % 3; refreshLabels(); savePrefs(); btnLabels.blur(); });
+  btnRec.addEventListener('click', function () { if (recording) stopRec(); else startRec(); btnRec.blur(); });
+  btnPlay.addEventListener('click', function () { if (playing === 'rec') stopPlay(); else startPlay(rec, 'rec'); btnPlay.blur(); });
+  btnDemo.addEventListener('click', function () { if (playing === 'demo') stopPlay(); else startPlay(demoEvents(), 'demo'); btnDemo.blur(); });
+  btnClear.addEventListener('click', function () {
+    rec = [];
+    try { localStorage.removeItem(RECKEY); } catch (e) {}
+    updateInfo(); btnClear.blur();
+  });
+  vol.addEventListener('input', function () { if (master) master.gain.value = vol.value / 100 * 1.2; savePrefs(); });
+  window.addEventListener('arcade-tab', function (e) {
+    if (e.detail === 'piano') return;
+    releaseAll(); kmidi = {}; ptr = {}; setPedal(false); stopPlay(); stopRec();
+  });
+  window.addEventListener('blur', function () { releaseAll(); kmidi = {}; ptr = {}; setPedal(false); });
+
+  setInst(inst);
+  refreshLabels();
+  updateInfo();
 })();
 
 // ======================= Фонова музика: три стилі, що генеруються в браузері =======================
@@ -2262,7 +2862,8 @@ window.fitCanvas = function (canvas, ctx, W, H) {
   var ac = null, master = null, rv = null, dlIn = null, bus = null, noiseBuf = null;
   var nextT = 0, bar = 0, timer = null, failed = false;
   function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
-  function level() { return on ? volume * 1.6 : 0; }
+  var ducked = false;      // на вкладці піаніно фонова музика затихає
+  function level() { return on ? volume * 1.6 * (ducked ? 0.18 : 1) : 0; }
 
   function build() {
     var AC = window.AudioContext || window.webkitAudioContext;
@@ -2378,12 +2979,12 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     var st = STYLES[style];
     while (nextT < ac.currentTime + 1.5) { st.play(nextT, bar, bus); nextT += st.len; bar++; }
   }
-  function applyLevel() {
+  function applyLevel(quick) {
     if (!ac) return;
     var t = ac.currentTime;
     master.gain.cancelScheduledValues(t);
     master.gain.setValueAtTime(master.gain.value, t);
-    master.gain.linearRampToValueAtTime(level(), t + (on ? 3 : 0.6));
+    master.gain.linearRampToValueAtTime(level(), t + (quick ? 0.8 : (on ? 3 : 0.6)));
   }
   function paintStyle() {
     Array.prototype.forEach.call(chips, function (b) { b.setAttribute('aria-checked', b.getAttribute('data-music') === style ? 'true' : 'false'); });
@@ -2472,6 +3073,8 @@ window.fitCanvas = function (canvas, ctx, W, H) {
     if (document.hidden) { try { ac.suspend(); } catch (e) {} }
     else if (on) { try { ac.resume(); } catch (e) {} }
   });
+  window.arcadeUnlockAudio = unlockIOS;      // ним користуються і ігри, і піаніно
+  window.addEventListener('arcade-tab', function (e) { ducked = e.detail === 'piano'; applyLevel(true); });
   paintStyle();
   paint();
 })();
